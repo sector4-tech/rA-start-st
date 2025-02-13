@@ -1,10 +1,6 @@
-prontera,147,171,6	script	ลูกแก้วแห่งความปรารถนา	10308,{
+prontera,147,171,6	script	THE BOX	10308,{
 	if($isEndOfService)
 	menu "ระบุเลข Item ที่ต้องการเลย",L_EndOfService,"ใช้งาน NPC ตามปกติ",-;
-	.@weaponCost = 25;
-	.@equipmentCost = 5;
-	.@cardCost = 100;
-	.@enchantmentCost = 250;
 	mes "ใช้ " + mesitemlink($wishingTicketItemId,true) + " ในการสุ่ม";
 	mes "Weapon ใช้ [^af1ada" + F_InsertComma(.@weaponCost) + " ชิ้น^000000]";
 	mes "Armor ใช้ [^af1ada" + F_InsertComma(.@equipmentCost) + " ชิ้น^000000]";

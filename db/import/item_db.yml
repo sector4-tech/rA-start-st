@@ -224,3 +224,47 @@ Body:
       NoSell: true
     Script: |
       callfunc("MasteryTicket");
+  - Id: 10000007
+    AegisName: THE_BOX
+    Name: THE BOX
+    Type: DelayConsume
+    Buy: 1
+    Trade:
+      NoSell: true
+    Script: |
+      callfunc("TheBox");
+  - Id: 10000008
+    AegisName: Weapon_Key
+    Name: Weapon Key
+    Type: Etc
+    Buy: 1
+    Trade:
+      NoSell: true
+  - Id: 10000009
+    AegisName: Equipment_Key
+    Name: Equipment Key
+    Type: Etc
+    Buy: 1
+    Trade:
+      NoSell: true
+  - Id: 10000010
+    AegisName: Costume_Key
+    Name: Costume Key
+    Type: Etc
+    Buy: 1
+    Trade:
+      NoSell: true
+  - Id: 10000011
+    AegisName: Card_Key
+    Name: Card Key
+    Type: Etc
+    Buy: 1
+    Trade:
+      NoSell: true
+  - Id: 10000012
+    AegisName: Enchantment_Key
+    Name: Enchantment Key
+    Type: Etc
+    Buy: 1
+    Trade:
+      NoSell: true
