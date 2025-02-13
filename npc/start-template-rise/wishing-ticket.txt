@@ -56,6 +56,8 @@ prontera,147,171,6	script	THE BOX	10308,{
 	
 	L_Enchantment:
 	.@variableName$ = "enchant2Ids";
+	if(rand(100) < 50)
+	.@variableName$ = "enchant3Ids";
 	.@cost = .@enchantmentCost;
 	.@mes$ = "ต้องการสุ่ม Enchantment กี่รอบ?";
 	goto L_Confirmation;
