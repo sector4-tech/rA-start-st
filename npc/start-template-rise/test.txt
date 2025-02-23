@@ -119,3 +119,9 @@ prontera,164,188,4	script	เช็ค Item เด้ง	84,{
 OnBuyItem:
 	end;
 }
+
+prontera,166,190,4	script	รวม Item Custom	84,{
+	for(.@i = 10000000; .@i <= 10000012; .@i++)
+	getitem .@i,1;
+	end;
+}
