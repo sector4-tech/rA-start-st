@@ -1,0 +1,92 @@
+// Server start -> Setup monster id each room
+// Everytime player login -> Check not allow map -> Move to prontera
+// Spawn monster when player enter + Request map
+// Spawn +1 more on monster dead
+// Every 10 minutes -> Check not allow map -> Move to prontera -> Setup monster id each room
+-	script	TheBoxRoom	-1,{
+	end;
+	
+OnMinute00:
+OnMinute10:
+OnMinute20:
+OnMinute30:
+OnMinute40:
+OnMinute50:
+	// Every 10 minutes -> Re-initialize
+	$isTheBoxRoomInit = 0;
+	
+OnSetupMonsterId:
+	// Check if already initialize
+	if ($isTheBoxRoomInit)
+	return;
+
+	freeloop(1);
+	
+	// Loop 100 rooms
+	// Clear monster on map
+	for(.@i = 0; .@i < 100; .@i++)
+	killmonsterall $maps$[$playingMaps[.@i]];
+	
+	// Clear playing map
+	deletearray $playingMaps[0],getarraysize($playingMaps);
+	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
+	deletearray $isTheBoxRoomBossDead[0],getarraysize($isTheBoxRoomBossDead);
+	
+	// Loop 100 rooms
+	for(.@i = 0; .@i < 100; .@i++){
+		// Clear monster set list
+		deletearray getd("$tbrMID" + .@i + "[0]"),getarraysize(getd("$tbrMID" + .@i));
+
+		// Setup monster set list
+		.@tier = (.@i / 10) + 1;
+		
+		setarray getd("$tbrMID" + .@i + "[0]")
+		,getd("$attackableMonsterTier" + .@tier + "Ids[" + rand(getarraysize(getd("$attackableMonsterTier" + .@tier + "Ids"))) + "]")
+		,getd("$attackableMonsterTier" + .@tier + "Ids[" + rand(getarraysize(getd("$attackableMonsterTier" + .@tier + "Ids"))) + "]")
+		,getd("$attackableMonsterTier" + .@tier + "Ids[" + rand(getarraysize(getd("$attackableMonsterTier" + .@tier + "Ids"))) + "]")
+		,getd("$attackableMonsterTier" + .@tier + "Ids[" + rand(getarraysize(getd("$attackableMonsterTier" + .@tier + "Ids"))) + "]")
+		;
+		
+		// Setup EXP multiplier
+		set getd("$tbrExpMultiplier" + .@i),
+		(rand(100) < 10) ? 5	// 10%		EXP x5
+		: (rand(100) < 20) ? 4	// 20%		EXP x4
+		: (rand(100) < 40) ? 3	// 40%		EXP x3
+		: (rand(100) < 80) ? 2	// 80%		EXP x2
+		: 1								// 100%	EXP x1
+		;
+		
+		// Setup Drop multiplier
+		set getd("$tbrDropMultiplier" + .@i),
+		(rand(100) < 5) ? 5		// 5%		Drop x5
+		: (rand(100) < 10) ? 4	// 10%		Drop x4
+		: (rand(100) < 20) ? 3	// 20%		Drop x3
+		: (rand(100) < 40) ? 2	// 40%		Drop x2
+		: 1								// 100%	Drop x1
+		;
+		
+		// Setup boss
+		set getd("$tbrBMID" + .@i),$mvpIds[rand(getarraysize($mvpIds))];
+		
+		// Setup map
+		$playingMaps[.@i] = callfunc("GetAvailableMap");
+	}
+	
+	freeloop(0);
+	
+	// Mark as initialized
+	$isTheBoxRoomInit = 1;
+	
+	end;
+
+OnInit:
+	// Spawn amount per map
+	$tbrSpawnAmount = 150;
+	
+	// First time initialize
+	$isTheBoxRoomInit = 0;
+	if(!$isTheBoxRoomInit)
+	callsub OnSetupMonsterId;
+
+	end;
+}

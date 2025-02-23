@@ -23,9 +23,7 @@ function	script	ResetTired	{
 }
 
 function	script	IsSkipTickMap	{
-	if(@isOnlyGodEnter)
-	return 1;
-	.@value$ = getarg(0,strcharinfo(3));
+	.@value$ = getarg(0,"");
 	return ((.@value$ == "prontera") || (.@value$ == "prt_in") || (.@value$ == "s_atelier") || (.@value$ == "prt_church") || (.@value$ == "bossnia_01") || (.@value$ == "bossnia_02") || (.@value$ == "bossnia_03") || (.@value$ == "bossnia_04") || (.@value$ == "pvp_n_1-3") || (.@value$ == "pvp_n_1-5") || (.@value$ == "pvp_n_1-1") || (.@value$ == "guild_vs5") || (.@value$ == "guild_vs4") || (.@value$ == "guild_vs1") || (.@value$ == "tra_fild") || (.@value$ == "06guild_01") || (.@value$ == "06guild_02") || (.@value$ == "06guild_03") || (.@value$ == "06guild_04"));
 }
 
@@ -569,3 +567,42 @@ function	script	MasteryTicket	{
 	
 	return;
 }
+
+function	script	GetAvailableMap	{
+	// Random the map
+	.@isFoundSameMap = 1;
+	.@retry = 300;
+	while(.@isFoundSameMap && (.@retry > 0)){
+		.@retry--;
+		
+		// Random map index
+		.@mapIndex = rand(getarraysize($maps$));
+		.@isContinue = 0;
+		// Loop all level and check map available
+		for(.@i = 0; .@i < getarraysize($playingMaps); .@i++){
+			// Error because found same map index
+			if((.@mapIndex == $playingMaps[.@i]) || IsSkipTickMap($maps$[.@mapIndex])){
+				.@isContinue = 1;
+				break;
+			}
+		}
+		// Loop all level and check map available
+		for(.@i = 0; .@i < getarraysize($playingBossMaps); .@i++){
+			// Error because found same map index
+			if((.@mapIndex == $playingBossMaps[.@i]) || IsSkipTickMap($maps$[.@mapIndex])){
+				.@isContinue = 1;
+				break;
+			}
+		}
+		// Good! Found available map now
+		if(!.@isContinue)
+		.@isFoundSameMap = 0;
+	}
+	// Error..
+	if(.@retry <= 0){
+		mes "โปรดรอสักครู่ ขณะนี้ Map เต็ม";
+		close;
+	}
+	return .@mapIndex;
+}
+

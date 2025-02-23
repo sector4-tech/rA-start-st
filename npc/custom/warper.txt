@@ -1,24 +1,119 @@
 -	script	Warp	-1,{
+	specialeffect2 509;
+	
 	bonusDebuff = 0;
 	
 	ApplyTired();
 	
-	mes "• Bot & Macro == ^d32323Ban 30 วัน^000000 (ไม่มีปลด Ban)";
+	mes "• Bot & Macro == ^d32323Ban 30 วัน^000000";
 	mes "• ใช้ Macro ^d32323ต้องอยู่จอ^000000";
 	mes "• เปิดเกมทิ้งไว้ (^1c9311สาย AFK^000000) ทำได้";
 	mes "• เปิดเกมทิ้งไว้ (^1c9311สาย Homunculus^000000) ทำได้";
-
-	// --------------------------------------------------
-	//	Main Menu:
-	// --------------------------------------------------
-	
-	menu " ~ ทดสอบ Damage",TestDamage,
-	" ~ THE BOX ROOM",MysteryDungeons,
-	" ~ PvP [^af1ada" + getmapusers("pvp_n_1-3") + " คน^000000]",Pvp,
-	" ~ PvP (Party ได้) [^af1ada" + getmapusers("pvp_n_1-5") + " คน^000000]",PvpParty,
-	" ~ PvP (Guild ได้) [^af1ada" + getmapusers("pvp_n_1-1") + " คน^000000]",PvpGuild
+	menu " ~ THE BOX ROOM",TheBoxRoom
+	," ~ ทดสอบ Damage",TestDamage
+	," ~ PvP [^af1ada" + getmapusers("pvp_n_1-3") + " คน^000000]",Pvp
+	," ~ PvP (Party ได้) [^af1ada" + getmapusers("pvp_n_1-5") + " คน^000000]",PvpParty
+	," ~ PvP (Guild ได้) [^af1ada" + getmapusers("pvp_n_1-1") + " คน^000000]",PvpGuild
 	;
 	
+	// --------------------------------------------------
+	//	THE BOX ROOM:
+	// --------------------------------------------------
+TheBoxRoom:
+	clear;
+	mes "ระบุ ระดับความยาก (1~20)";
+	next;
+	input .@difficulty;
+	if((.@difficulty <= 0) || (.@difficulty > 20)){
+		mes "ยกเลิกเรียบร้อยแล้ว";
+		close;
+	}
+	
+	for(.@i = 0; .@i < 5; .@i++){
+		// Information - Monster ID
+		setarray .@monsterIds[0]
+		,getd("$tbrMID" + .@i + "[0]")
+		,getd("$tbrMID" + .@i + "[1]")
+		,getd("$tbrMID" + .@i + "[2]")
+		,getd("$tbrMID" + .@i + "[3]")
+		;
+		
+		// Information - Monster name
+		setarray .@monsterNames$[0]
+		,"^d8601b" + getmonsterinfo(.@monsterIds[0],MOB_NAME) + "^000000"
+		,"^d8601b" + getmonsterinfo(.@monsterIds[1],MOB_NAME) + "^000000"
+		,"^d8601b" + getmonsterinfo(.@monsterIds[2],MOB_NAME) + "^000000"
+		,"^d8601b" + getmonsterinfo(.@monsterIds[3],MOB_NAME) + "^000000"
+		;
+		
+		// Tell player here
+		mes "^1c9311ห้อง " + (.@i + 1) + "^000000 [EXP ^00aaff" + KM($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i)) + "^000000, Drop x " + getd("$tbrDropMultiplier" + .@i) + "]"
+		+ "^000000\n• " + .@monsterNames$[0] + " (" + .@monsterIds[0] + ")"
+		+ "^000000\n• " + .@monsterNames$[1] + " (" + .@monsterIds[1] + ")"
+		+ "^000000\n• " + .@monsterNames$[2] + " (" + .@monsterIds[2] + ")" 
+		+ "^000000\n• " + .@monsterNames$[3] + " (" + .@monsterIds[3] + ")"
+		+ "^000000\n• โอกาสพบ ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "0.01%"
+		;
+		
+		// Menu creator
+		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ระดับความยาก " + .@difficulty + "):";
+	}
+	
+	next;
+	
+	// Select room 1~5 from each tier
+	.@index = (select(.@tbrMenu$) - 1);
+	debugmes "Select room " + (.@index + 1);
+	// Get actual map index
+	.@room = .@index * (cap_value(.@difficulty - 1,1,INT_MAX));
+	debugmes "Map index " + .@room;
+	// Remember last play map index
+	lastPlayMap = .@room;
+	
+	// Remember last play map name
+	lastPlayMap$ = $maps$[$playingMaps[.@room]];
+	debugmes "Map " + lastPlayMap$;
+	// Remember last play map tier
+	tier = .@difficulty;
+	debugmes "Tier " + tier;
+	// Warp now
+	warp lastPlayMap$,0,0;
+	
+	// Spawn if need
+	if(!$isMapSpawnMonster[lastPlayMap]){
+		callsub OnSpawnMore,lastPlayMap,$tbrSpawnAmount,1,0;
+		
+		$isMapSpawnMonster[lastPlayMap] = 1;	
+	}
+	
+	end;
+	
+OnSpawnMore:
+	.@index = getarg(0,0);
+	.@amount = getarg(1,0);
+	.@isNonBoss = getarg(2,1);
+	.@isBoss = getarg(3,1);
+	if(.@isNonBoss){
+		freeloop(1);
+		for(.@i = 0; .@i < .@amount; .@i++)
+		monster lastPlayMap$,0,0,"--ja--",getd("$tbrMID" + .@index + "[" + rand(0,3) + "]"),1,strnpcinfo(0) + "::OnMonsterDead";
+		freeloop(0);
+	}
+	if(.@isBoss && !getd("$isMysteryDungeonBossDead" + .@index))
+	monster lastPlayMap$,0,0,"--ja--",getd("$tbrMVP" + .@index),1,strnpcinfo(0) + "::OnBossDead";
+	return;
+
+OnMonsterDead: callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
+OnBossDead: callsub OnGetReward,1; $isTheBoxRoomBossDead[lastPlayMap] = 1; end;
+
+OnGetReward:
+	.@isBoss = getarg(0,0);
+	// Reward EXP
+	return;
+	
+	// --------------------------------------------------
+	//	Testing damage:
+	// --------------------------------------------------
 TestDamage:
 	clear;
 	mes "ระบุ % ของเสื่อม";
@@ -29,33 +124,10 @@ TestDamage:
 	setarray .@mapName$[0],"tra_fild","06guild_01","06guild_02","06guild_03","06guild_04";
 	warp .@mapName$[.@index],0,0;
 	end;
-
-MysteryDungeons:
-	mes "ระบุระดับความยาก 1~20";
-	next;
-	input .@difficulty;
-	if((.@difficulty <= 0) || (.@difficulty > 20)){
-		mes "ยกเลิกเรียบร้อยแล้ว";
-		close;
-	}
-	for(.@i = 0; .@i < 5; .@i++){
-		setarray .@monsterIds[0],getd("$mysteryDungeonMID" + .@i + "[0]"),getd("$mysteryDungeonMID" + .@i + "[1]"),getd("$mysteryDungeonMID" + .@i + "[2]"),getd("$mysteryDungeonMID" + .@i + "[3]");
-		setarray .@monsterNames$[0],"^d8601b" + getmonsterinfo(.@monsterIds[0],MOB_NAME) + "^000000","^d8601b" + getmonsterinfo(.@monsterIds[1],MOB_NAME) + "^000000","^d8601b" + getmonsterinfo(.@monsterIds[2],MOB_NAME) + "^000000","^d8601b" + getmonsterinfo(.@monsterIds[3],MOB_NAME) + "^000000";
-		setarray .@monsterExps[0],getmonsterinfo(.@monsterIds[0],MOB_BASEEXP),getmonsterinfo(.@monsterIds[1],MOB_BASEEXP),getmonsterinfo(.@monsterIds[2],MOB_BASEEXP),getmonsterinfo(.@monsterIds[3],MOB_BASEEXP);
-		mes "^1c9311ห้องที่ " + (.@i + 1) + "^000000 [^d32323" + getmonsterinfo(getd("$mysteryDungeonMVP" + .@i),MOB_NAME) + "^000000]\n• " + .@monsterNames$[0] + "(" + .@monsterIds[0] + ") EXP ^00aaff" + KM(.@monsterExps[0]) + "^000000\n• " + .@monsterNames$[1] + "(" + .@monsterIds[1] + ") EXP ^00aaff" + KM(.@monsterExps[1]) + "^000000\n• " + .@monsterNames$[2] + "(" + .@monsterIds[2] + ") EXP ^00aaff" + KM(.@monsterExps[2]) + "^000000\n• " + .@monsterNames$[3] + "(" + .@monsterIds[3] + ") EXP ^00aaff" + KM(.@monsterExps[3]) + "^000000";
-		.@mysteryDungeonMenu$ += " ~ ห้องที่ " + (.@i + 1) + " [Boss - " + (getd("$isMysteryDungeonBossDead" + .@i) ? "^d32323ไม่มีชีวิต^000000" : "^1c9311มีชีวิต^000000") + "] [^af1ada" + getitemname(.@costItemId) + " " + F_InsertComma(.@cost) + " ชิ้น^000000] :";
-	}
-	next;
-	.@index = (select(.@mysteryDungeonMenu$) - 1);
-	if(countitem(.@costItemId) < .@cost){
-		mes getitemname(.@costItemId) + " ไม่เพียงพอ";
-		close;
-	}
-	delitem .@costItemId,.@cost;
-	specialeffect2 509;
-	warp $mysteryDungeonMapName$[.@index],0,0;
-	end;
-
+	
+	// --------------------------------------------------
+	//	PVP:
+	// --------------------------------------------------
 Pvp:
 	warp "pvp_n_1-3",0,0;
 	end;
