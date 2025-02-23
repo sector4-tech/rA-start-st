@@ -22,15 +22,12 @@ prontera,151,199,3	script	Mini GvG#minigvg	10554,{
 		}
 	}
 	else{
-		.@rewardItemId = $riseStoneItemId;
+		.@rewardItemId = RISE_STONE_ITEM_ID;
 		.@rewardAmount = 50;
-		.@rewardItemId2 = $wishingTicketItemId;
-		.@rewardAmount2 = 500;
 		mes "Mini GvG";
 		mes "เริ่ม: 21:00น.";
 		mes "สิ้นสุด: 21:15น.";
 		mes "รางวัล: " + mesitemlink(.@rewardItemId,true) + " " + .@rewardAmount + " ชิ้น";
-		mes "รางวัล: " + mesitemlink(.@rewardItemId2,true) + " " + .@rewardAmount2 + " ชิ้น";
 		.@castleGID = GetCastleData("guild_vs1",CD_GUILD_ID);
 		
 		if(!.@castleGID){
@@ -64,7 +61,6 @@ prontera,151,199,3	script	Mini GvG#minigvg	10554,{
 		menu "รับรางวัล",-;
 		
 		getitem .@rewardItemId,.@rewardAmount;
-		getitem .@rewardItemId2,.@rewardAmount2;
 		$isMiniGvGRewarded = 1;
 	}
 	end;

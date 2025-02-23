@@ -33,3 +33,31 @@
 Header:
   Type: CONSTANT_DB
   Version: 1
+
+Body:
+  - Name: REFINE_HACK_POWDER_ITEM_ID
+    Value: 10000000
+  - Name: WISHING_TICKET_ITEM_ID
+    Value: 10000001
+  - Name: RISE_STONE_ITEM_ID
+    Value: 10000002
+  - Name: MYSTERY_BUFF_BOX_ITEM_ID
+    Value: 10000003
+  - Name: MYSTERY_PACKAGE_BOX_ITEM_ID
+    Value: 10000004
+  - Name: GOD_TICKET_ITEM_ID
+    Value: 10000005
+  - Name: MASTERY_TICKET_ITEM_ID
+    Value: 10000006
+  - Name: THE_BOX_ITEM_ID
+    Value: 10000007
+  - Name: WEAPON_KEY_ITEM_ID
+    Value: 10000008
+  - Name: EQUIPMENT_KEY_ITEM_ID
+    Value: 10000009
+  - Name: COSTUME_KEY_ITEM_ID
+    Value: 10000010
+  - Name: CARD_KEY_ITEM_ID
+    Value: 10000011
+  - Name: ENCHANTMENT_KEY_ITEM_ID
+    Value: 10000012

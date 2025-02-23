@@ -2,27 +2,6 @@
 	end;
 	
 OnPCLoginEvent:
-	if($isEndOfService && (strcharinfo(3) == "prontera")){
-		mes "Server กำลังจะปิด (ไม่ระบุวันแน่ชัด)";
-		Zeny = 2000000000;
-		getitem $refineHackPowderItemId,3000;
-		getitem $wishingTicketItemId,3000;
-		getitem $riseStoneItemId,3000;
-		getitem $mysteryBuffBoxItemId,3000;
-		getitem $mysteryPackageBoxItemId,3000;
-		getitem $godTicketItemId,3000;
-		getitem $masteryTicketItemId,3000;
-		sc_start SC_EXPBOOST,1800000,1000000;
-		sc_start SC_ITEMBOOST,1800000,1000000;
-		atcommand "@refine 0 99";
-		atcommand "@grade 0 99";
-		atcommand "@lvup 999";
-		atcommand "@joblvup 999";
-		atcommand "@skillall";
-		atcommand "@statsall";
-		atcommand "@traitall";
-		close2;
-	}
 	addtimer 10000,strnpcinfo(3) + "::OnPlayTimeTick";
 	if(tired)
 	ApplyTired();

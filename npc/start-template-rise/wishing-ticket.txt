@@ -1,15 +1,13 @@
 prontera,147,171,6	script	THE BOX	10308,{
-	if($isEndOfService)
-	menu "ระบุเลข Item ที่ต้องการเลย",L_EndOfService,"ใช้งาน NPC ตามปกติ",-;
-	mes "ใช้ " + mesitemlink($wishingTicketItemId,true) + " ในการสุ่ม";
+	mes "ใช้ " + mesitemlink(THE_BOX_ITEM_ID,true) + " ในการสุ่ม";
 	mes "Weapon ใช้ [^af1ada" + F_InsertComma(.@weaponCost) + " ชิ้น^000000]";
 	mes "Armor ใช้ [^af1ada" + F_InsertComma(.@equipmentCost) + " ชิ้น^000000]";
 	mes "Card ใช้ [^af1ada" + F_InsertComma(.@cardCost) + " ชิ้น^000000]";
 	mes "Enchantment ใช้ [^af1ada" + F_InsertComma(.@enchantmentCost) + " ชิ้น^000000]";
-	.@wishingTicketAmount = countitem($wishingTicketItemId);
+	.@wishingTicketAmount = countitem(THE_BOX_ITEM_ID);
 	if(!.@wishingTicketAmount){
 		next;
-		mes mesitemlink($wishingTicketItemId,true) + " ไม่เพียงพอ";
+		mes mesitemlink(THE_BOX_ITEM_ID,true) + " ไม่เพียงพอ";
 		close;		
 	}
 	next;
@@ -63,13 +61,13 @@ prontera,147,171,6	script	THE BOX	10308,{
 	L_Confirmation:
 	.@wishingTicketAmount = .@wishingTicketAmount / .@cost;
 	if(!.@wishingTicketAmount){
-		mes mesitemlink($wishingTicketItemId,true) + " ไม่เพียงพอ";
+		mes mesitemlink(THE_BOX_ITEM_ID,true) + " ไม่เพียงพอ";
 		close;		
 	}
 	mes .@mes$;
 	mes "(0~" + F_InsertComma(.@wishingTicketAmount) + ")";
 	mes "^d32323(ระบุ 99999 เพื่อใช้ระบบ สุ่มแล้วทิ้งจนกว่าจะเจอ Item ที่ต้องการ)^000000";
-	mes "^1c9311(หากมี " + mesitemlink($godTicketItemId,true) + " จะทำให้เจอง่ายขึ้น 20%)^000000";
+	mes "^1c9311(หากมี " + mesitemlink(GOD_TICKET_ITEM_ID,true) + " จะทำให้เจอง่ายขึ้น 20%)^000000";
 	input .@i;
 	if(.@i == 99999){
 		mes "โปรดระบุ Item ID ที่ต้องการในหมวดนี้";
@@ -92,7 +90,7 @@ prontera,147,171,6	script	THE BOX	10308,{
 			close;
 		}
 		mes "คุณต้องการ " + mesitemlink(.@wishItemId,true);
-		mes "ใช้ [^af1ada" + mesitemlink($wishingTicketItemId,true) + " " + F_InsertComma(.@cost) + " ชิ้น^000000] ไปเรื่อย ๆ จนกว่าจะเจอ";
+		mes "ใช้ [^af1ada" + mesitemlink(THE_BOX_ITEM_ID,true) + " " + F_InsertComma(.@cost) + " ชิ้น^000000] ไปเรื่อย ๆ จนกว่าจะเจอ";
 		next;
 		menu "ยกเลิก",-,"ยืนยัน",L_WishConfirm;
 		close;
@@ -111,13 +109,13 @@ prontera,147,171,6	script	THE BOX	10308,{
 			close;
 		}
 		.@i--;
-		delitem $wishingTicketItemId,.@cost;
+		delitem THE_BOX_ITEM_ID,.@cost;
 		if(.@wishItemId){
-			if(countitem($godTicketItemId)){
-				delitem $godTicketItemId,1;
+			if(countitem(GOD_TICKET_ITEM_ID)){
+				delitem GOD_TICKET_ITEM_ID,1;
 				if(rand(100) < 20){
 					getitem .@wishItemId,1;
-					announce strcharinfo(0) + " สุ่มจนกว่าจะเจอ " + getitemname(.@wishItemId) + " สำเร็จ! (โดยใช้ " + getitemname($godTicketItemId) + " ด้วย)",bc_all;
+					announce strcharinfo(0) + " สุ่มจนกว่าจะเจอ " + getitemname(.@wishItemId) + " สำเร็จ! (โดยใช้ " + getitemname(GOD_TICKET_ITEM_ID) + " ด้วย)",bc_all;
 					break;
 				}
 			}

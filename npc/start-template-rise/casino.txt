@@ -1,6 +1,6 @@
 prontera,173,184,1	script	บ่อน	563,{
 	setarray .@prices[0]
-	,100000 // Wishing Ticket
+	,100000 // THE BOX
 	,100000 // Refine Hack Powder
 	,100000 // Rise Stone
 	,100000 // God Ticket
@@ -9,20 +9,20 @@ prontera,173,184,1	script	บ่อน	563,{
 	,1000000 // Grade All +1
 	;
 	setarray .@rates[0]
-	,50 // Wishing Ticket
-	,10 // Refine Hack Powder
-	,75 // Rise Stone
-	,5 // God Ticket
+	,30 // THE BOX
+	,5 // Refine Hack Powder
+	,15 // Rise Stone
+	,2 // God Ticket
 	,1 // Mastery Ticket
 	,3 // Refine All +1
-	,7 // Grade All +1
+	,4 // Grade All +1
 	;
 	setarray .@itemId[0]
-	,$wishingTicketItemId // Wishing Ticket
-	,$refineHackPowderItemId // Refine Hack Powder
-	,$riseStoneItemId // Rise Stone
-	,$godTicketItemId // God Ticket
-	,$masteryTicketItemId // Mastery Ticket
+	,THE_BOX_ITEM_ID
+	,REFINE_HACK_POWDER_ITEM_ID
+	,RISE_STONE_ITEM_ID
+	,GOD_TICKET_ITEM_ID
+	,MASTERY_TICKET_ITEM_ID
 	,0 // Refine All +1
 	,0 // Grade All +1
 	;

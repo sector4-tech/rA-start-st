@@ -1,4 +1,4 @@
-prontera,149,194,3	script	ตั๋วเดา	563,{
+prontera,176,187,3	script	ตั๋วเดา	563,{
 	if(!guessMin)
 	guessMin = 1;
 	if(!guessMax)
@@ -48,20 +48,20 @@ prontera,149,194,3	script	ตั๋วเดา	563,{
 	
 OnInit:
 	.reward = 100;
-	.priceItemId = $wishingTicketItemId;
-	.rewardItemId = $wishingTicketItemId;
+	.priceItemId = THE_BOX_ITEM_ID;
+	.rewardItemId = THE_BOX_ITEM_ID;
 	waitingroom "ตั๋วเดา",0;
 	end;
 }
 
-prontera,147,195,3	script	Zeny เดา	563,{
+prontera,179,190,3	script	Zeny เดา	563,{
 	if(!guessMinZeny)
 	guessMinZeny = 1;
 	if(!guessMaxZeny)
 	guessMaxZeny = 100;
 	if(!guessTargetZeny)
 	guessTargetZeny = rand(1,100);
-	mes "รางวัล " + .reward + "z ";
+	mes "รางวัล " + F_InsertComma(.reward) + "z ";
 	mes "---";
 	L_Replay:
 	mes "วิธีเล่น";
@@ -71,7 +71,7 @@ prontera,147,195,3	script	Zeny เดา	563,{
 	.@price = 1;
 	if(.@price > 500000)
 	.@price = 500000;
-	mes "ใช้ " + .@price + "z";
+	mes "ใช้ " + F_InsertComma(.@price) + "z";
 	input .@i;
 	if((.@i <= 0) || (.@i > guessMaxZeny) || (.@i < guessMinZeny)){
 		clear;

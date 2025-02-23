@@ -25,7 +25,7 @@ prontera,152,214,1	script	เดือด	10548,{
 	if(IsWeekend())
 	mes "• ^d598f0พิเศษวันหยุด จำนวน Boss ที่ต้องกำจัดน้อยลง^000000";
 	mes "• ^d32323โปรดระวังหากใครคนหนึ่งใน Party เข้าสู่เมือง Prontera ระหว่างกำลังเล่นห้องพิเศษนี้ ห้องพิเศษนี้จะถูกทำลาย^000000";
-	mes "• เมื่อกำจัด Boss จนหมดห้อง จะได้รับ " + mesitemlink($masteryTicketItemId,true);
+	mes "• เมื่อกำจัด Boss จนหมดห้อง จะได้รับ " + mesitemlink(MASTERY_TICKET_ITEM_ID,true);
 	mes "• Boss จะมี Rank " + F_InsertComma(monsterRank);
 	mes "• Boss จะเคลื่อนที่เร็ว (สุ่ม)";
 	mes "• Boss จะรับ Damage 1% (เสมือน Aura เขียว)";
@@ -122,7 +122,7 @@ OnBossDead:
 			end;
 		}
 		announce "'เดือด' ผ่านแล้ว!",bc_map;
-		getitem $masteryTicketItemId,'rewardAmount;
+		getitem MASTERY_TICKET_ITEM_ID,'rewardAmount;
 		addtimer 2000,instance_npcname(strnpcinfo(0)) + "::OnComplete";
 	}
 	else

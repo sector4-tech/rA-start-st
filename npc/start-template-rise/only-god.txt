@@ -25,7 +25,7 @@ prontera,159,214,8	script	ซัดเทพ	10371,{
 	mes "[วิธีเล่น]";
 	mes "• ^d32323โปรดระวังหากใครคนหนึ่งใน Party เข้าสู่เมือง Prontera ระหว่างกำลังเล่นห้องพิเศษนี้ ห้องพิเศษนี้จะถูกทำลาย^000000";
 	mes "• Boss จะเกิดตามจำนวนที่เลือก";
-	mes "• เมื่อกำจัด Boss จนหมดห้อง จะได้รับ " + mesitemlink($godTicketItemId,true);
+	mes "• เมื่อกำจัด Boss จนหมดห้อง จะได้รับ " + mesitemlink(GOD_TICKET_ITEM_ID,true);
 	mes "• Boss จะมี Rank " + F_InsertComma(monsterRank);
 	mes "• Boss จะเคลื่อนที่เร็ว (สุ่ม)";
 	mes "• คุณจะติด Debuff " + F_InsertComma(.@debuff) + "%";
@@ -99,7 +99,7 @@ OnBossDead:
 'progression++;
 		if('progression >= 'spawnAmount){
 			announce "'ซัดเทพ' ผ่านแล้ว!",bc_map;
-			getitem $godTicketItemId,'rewardAmount;
+			getitem GOD_TICKET_ITEM_ID,'rewardAmount;
 			addtimer 2000,instance_npcname(strnpcinfo(0)) + "::OnComplete";
 		}
 		else
