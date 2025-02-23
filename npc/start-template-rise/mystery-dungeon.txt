@@ -1,3 +1,8 @@
+// Server start -> Setup monster id each room
+// Everytime player login -> Check not allow map -> Move to prontera
+// Spawn monster when player enter + Request map
+// Spawn +1 more on monster dead
+// Every 10 minutes -> Check not allow map -> Move to prontera -> Setup monster id each room
 -	script	MysteryDungeon	-1,{
 	end;
 	
@@ -7,26 +12,30 @@ OnMinute20:
 OnMinute30:
 OnMinute40:
 OnMinute50:
-	.@isTimeRefresh = 1;
-	$mysteryDungeonCD = 0;
-	L_RefreshMonsterId:
-	if ($mysteryDungeonCD)
-	return;
-	$mysteryDungeonCD = 1;
-	for(.@i = 0; .@i < getarraysize($mysteryDungeonMapName$); .@i++){
-		if(.@isTimeRefresh)
-		killmonsterall $mysteryDungeonMapName$[.@i];
-		deletearray getd("$mysteryDungeonMID" + .@i + "[0]"),getarraysize(getd("$mysteryDungeonMID" + .@i));
-		setarray getd("$mysteryDungeonMID" + .@i + "[0]"),$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))];
-		set getd("$mysteryDungeonMVP" + .@i),$mvpIds[rand(getarraysize($mvpIds))];
-		set getd("$isMysteryDungeonBossDead" + .@i),0;
-		if(.@isTimeRefresh)
-		callsub OnSpawnMore,.@i,$mysteryDungeonSpawnAmount / ((.@i % 2 == 0) ? 2 : 1);
-	}
-	if(.@isTimeRefresh)
-	end;
+	// Every 10 minutes -> Re-initialize
+	$isMysteryDungeonInit = 0;
+	
+OnSetupMonsterId:
+	// Check if already initialize
+	if ($isMysteryDungeonInit)
 	return;
 
+	// Loop 100 rooms
+	for(.@i = 0; .@i < 100; .@i++){
+		// Clear monster on map
+		killmonsterall $mysteryDungeonMapName$[.@i];
+		// Clear monster set list
+		deletearray getd("$mysteryDungeonMID" + .@i + "[0]"),getarraysize(getd("$mysteryDungeonMID" + .@i));
+		// Setup monster set list
+		setarray getd("$mysteryDungeonMID" + .@i + "[0]"),$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))];
+		// Setup boss
+		set getd("$mysteryDungeonMVP" + .@i),$mvpIds[rand(getarraysize($mvpIds))];
+	}
+	
+	// Mark as initialized
+	$isMysteryDungeonInit = 1;
+	
+	end;
 
 OnSpawnMore:
 	.@index = getarg(0,0);
@@ -45,51 +54,19 @@ OnSpawnMore:
 
 OnMonsterDead0: callsub OnGetReward,0; callsub OnSpawnMore,0,1,1,0; end;
 OnBossDead0: callsub OnGetReward,1; $isMysteryDungeonBossDead0 = 1; end;
-OnMonsterDead1: callsub OnGetReward,0; callsub OnSpawnMore,1,1,1,0; end;
-OnBossDead1: callsub OnGetReward,1; $isMysteryDungeonBossDead1 = 1; end;
-OnMonsterDead2: callsub OnGetReward,0; callsub OnSpawnMore,2,1,1,0; end;
-OnBossDead2: callsub OnGetReward,1; $isMysteryDungeonBossDead2 = 1; end;
-OnMonsterDead3: callsub OnGetReward,0; callsub OnSpawnMore,3,1,1,0; end;
-OnBossDead3: callsub OnGetReward,1; $isMysteryDungeonBossDead3 = 1; end;
-OnMonsterDead4: callsub OnGetReward,0; callsub OnSpawnMore,4,1,1,0; end;
-OnBossDead4: callsub OnGetReward,1; $isMysteryDungeonBossDead4 = 1; end;
-OnMonsterDead5: callsub OnGetReward,0; callsub OnSpawnMore,5,1,1,0; end;
-OnBossDead5: callsub OnGetReward,1; $isMysteryDungeonBossDead5 = 1; end;
-OnMonsterDead6: callsub OnGetReward,0; callsub OnSpawnMore,6,1,1,0; end;
-OnBossDead6: callsub OnGetReward,1; $isMysteryDungeonBossDead6 = 1; end;
-OnMonsterDead7: callsub OnGetReward,0; callsub OnSpawnMore,7,1,1,0; end;
-OnBossDead7: callsub OnGetReward,1; $isMysteryDungeonBossDead7 = 1; end;
-OnMonsterDead8: callsub OnGetReward,0; callsub OnSpawnMore,8,1,1,0; end;
-OnBossDead8: callsub OnGetReward,1; $isMysteryDungeonBossDead8 = 1; end;
-OnMonsterDead9: callsub OnGetReward,0; callsub OnSpawnMore,9,1,1,0; end;
-OnBossDead9: callsub OnGetReward,1; $isMysteryDungeonBossDead9 = 1; end;
 
 OnGetReward:
 	.@isBoss = getarg(0,0);
-	if(rand(100) < (.@isBoss ? 100 : 1))
-	getitem RISE_STONE_ITEM_ID,1;
+	// Reward EXP
 	return;
-	
-OnSetup:
-	if(!$isMysteryDungeonInit){
-		$isMysteryDungeonInit = 1;
-		
-		callsub L_RefreshMonsterId;
-		for(.i = 0; .i < getarraysize($mysteryDungeonMapName$); .i++)
-		callsub OnSpawnMore,.i,$mysteryDungeonSpawnAmount;
-	}
-	end;
 
 OnInit:
+	// Spawn amount per map
 	$mysteryDungeonSpawnAmount = 150;
 	
-	deletearray $mysteryDungeonMapName$[0],getarraysize($mysteryDungeonMapName$);
-	setarray $mysteryDungeonMapName$[0],"ordeal_1-1","ordeal_1-2","ordeal_2-1","ordeal_2-2","ordeal_3-1","ordeal_3-2";
-	
-	if($isMysteryDungeonInit){
-		callsub L_RefreshMonsterId;
-		for(.i = 0; .i < getarraysize($mysteryDungeonMapName$); .i++)
-		callsub OnSpawnMore,.i,$mysteryDungeonSpawnAmount;
-	}
+	// First time initialize
+	if(!$isMysteryDungeonInit)
+	callsub OnSetupMonsterId;
+
 	end;
 }
