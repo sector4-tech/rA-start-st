@@ -40,7 +40,7 @@ ACMD_FUNC(debuff)
 
 	StringBuf buf;
 	StringBuf_Init(&buf);
-	StringBuf_Printf(&buf, msg_txt(sd,1538), sd->debuff, sd->bonusDebuff); // Debuff: %d | Item Bonus อ่อนแอลง: %d
+	StringBuf_Printf(&buf, msg_txt(sd,1539), sd->debuff, sd->bonusDebuff); // Debuff: %d | Item Bonus อ่อนแอลง: %d
 	clif_displaymessage(fd, StringBuf_Value(&buf));
 	StringBuf_Destroy(&buf);
 
