@@ -1,6 +1,7 @@
 -	script	Warp	-1,{
 	specialeffect2 509;
 	
+	tired = 0;
 	bonusDebuff = 0;
 	
 	ApplyTired();
@@ -16,9 +17,6 @@
 	," ~ PvP (Guild ได้) [^af1ada" + getmapusers("pvp_n_1-1") + " คน^000000]",PvpGuild
 	;
 	
-	// --------------------------------------------------
-	//	THE BOX ROOM:
-	// --------------------------------------------------
 TheBoxRoom:
 	clear;
 	mes "ระบุ ระดับความยาก (1~20)";
@@ -99,8 +97,8 @@ OnSpawnMore:
 		monster lastPlayMap$,0,0,"--ja--",getd("$tbrMID" + .@index + "[" + rand(0,3) + "]"),1,strnpcinfo(0) + "::OnMonsterDead";
 		freeloop(0);
 	}
-	if(.@isBoss && !getd("$isMysteryDungeonBossDead" + .@index))
-	monster lastPlayMap$,0,0,"--ja--",getd("$tbrMVP" + .@index),1,strnpcinfo(0) + "::OnBossDead";
+	if(.@isBoss && !$isTheBoxRoomBossDead[.@index]))
+	monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@index),1,strnpcinfo(0) + "::OnBossDead";
 	return;
 
 OnMonsterDead: callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
@@ -111,9 +109,6 @@ OnGetReward:
 	// Reward EXP
 	return;
 	
-	// --------------------------------------------------
-	//	Testing damage:
-	// --------------------------------------------------
 TestDamage:
 	clear;
 	mes "ระบุ % ของเสื่อม";
@@ -125,9 +120,6 @@ TestDamage:
 	warp .@mapName$[.@index],0,0;
 	end;
 	
-	// --------------------------------------------------
-	//	PVP:
-	// --------------------------------------------------
 Pvp:
 	warp "pvp_n_1-3",0,0;
 	end;
@@ -141,7 +133,4 @@ PvpGuild:
 	end;
 }
 
-// --------------------------------------------------
-//	Duplicates:
-// --------------------------------------------------
 prontera,161,199,4	duplicate(Warp)	Warp#prt	10558 

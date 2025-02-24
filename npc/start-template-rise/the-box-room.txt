@@ -83,7 +83,6 @@ OnInit:
 	$tbrSpawnAmount = 150;
 	
 	// First time initialize
-	$isTheBoxRoomInit = 0;
 	if(!$isTheBoxRoomInit)
 	callsub OnSetupMonsterId;
 
