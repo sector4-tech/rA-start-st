@@ -42,7 +42,7 @@ OnInit:
 	bindatcmd "ml",strnpcinfo(3) + "::OnMapLoad",99,99;
 	
 	addrid(0);
-	if(!IsSkipTickMap(strcharinfo(3)))
+	if(!IsCustomMap(strcharinfo(3)))
 	warp "Save",0,0;
 	end;
 	

@@ -1,4 +1,13 @@
-function	script	IsWeekend	{ .@day = gettime(DT_DAYOFWEEK); return (((.@day == FRIDAY) && gettime(DT_HOUR) >= 18) || (.@day == SATURDAY) || (.@day == SUNDAY)); }
+function	script	IsWeekend	{ 
+	.@day = gettime(DT_DAYOFWEEK);
+	return
+	(
+	((.@day == FRIDAY) && gettime(DT_HOUR) >= 18)
+	|| (.@day == SATURDAY)
+	|| (.@day == SUNDAY)
+	)
+	; 
+}
 
 function	script	IsInventoryFull	{ return (!checkweight(1100,1)); }
 
@@ -16,15 +25,32 @@ function	script	ApplyTired	{
 
 function	script	ResetTired	{
 	tired = 0;
-	tiredSpot = 0;
-	ptt = 0;
 	ApplyTired();
 	return;
 }
 
-function	script	IsSkipTickMap	{
+function	script	IsCustomMap	{
 	.@value$ = getarg(0,"");
-	return ((.@value$ == "prontera") || (.@value$ == "prt_in") || (.@value$ == "s_atelier") || (.@value$ == "prt_church") || (.@value$ == "bossnia_01") || (.@value$ == "bossnia_02") || (.@value$ == "bossnia_03") || (.@value$ == "bossnia_04") || (.@value$ == "pvp_n_1-3") || (.@value$ == "pvp_n_1-5") || (.@value$ == "pvp_n_1-1") || (.@value$ == "guild_vs5") || (.@value$ == "guild_vs4") || (.@value$ == "guild_vs1") || (.@value$ == "tra_fild") || (.@value$ == "06guild_01") || (.@value$ == "06guild_02") || (.@value$ == "06guild_03") || (.@value$ == "06guild_04"));
+	return
+	(
+	(.@value$ == "prontera")
+	|| (.@value$ == "bossnia_01")
+	|| (.@value$ == "bossnia_02")
+	|| (.@value$ == "bossnia_03")
+	|| (.@value$ == "bossnia_04")
+	|| (.@value$ == "pvp_n_1-3")
+	|| (.@value$ == "pvp_n_1-5")
+	|| (.@value$ == "pvp_n_1-1")
+	|| (.@value$ == "guild_vs5")
+	|| (.@value$ == "guild_vs4")
+	|| (.@value$ == "guild_vs1")
+	|| (.@value$ == "tra_fild")
+	|| (.@value$ == "06guild_01")
+	|| (.@value$ == "06guild_02")
+	|| (.@value$ == "06guild_03")
+	|| (.@value$ == "06guild_04")
+	)
+	;
 }
 
 function	script	StringBase10000	{
@@ -581,7 +607,7 @@ function	script	GetAvailableMap	{
 		// Loop all level and check map available
 		for(.@i = 0; .@i < getarraysize($playingMaps); .@i++){
 			// Error because found same map index
-			if((.@mapIndex == $playingMaps[.@i]) || IsSkipTickMap($maps$[.@mapIndex])){
+			if((.@mapIndex == $playingMaps[.@i]) || IsCustomMap($maps$[.@mapIndex])){
 				.@isContinue = 1;
 				break;
 			}
@@ -589,7 +615,7 @@ function	script	GetAvailableMap	{
 		// Loop all level and check map available
 		for(.@i = 0; .@i < getarraysize($playingBossMaps); .@i++){
 			// Error because found same map index
-			if((.@mapIndex == $playingBossMaps[.@i]) || IsSkipTickMap($maps$[.@mapIndex])){
+			if((.@mapIndex == $playingBossMaps[.@i]) || IsCustomMap($maps$[.@mapIndex])){
 				.@isContinue = 1;
 				break;
 			}
@@ -605,4 +631,3 @@ function	script	GetAvailableMap	{
 	}
 	return .@mapIndex;
 }
-
