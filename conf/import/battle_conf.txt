@@ -1,5 +1,5 @@
 // ราคาขายของทุกชิ้น มากสุดเท่าใด (มากสุด 2147483647)
-config_global_maximum_sell: 5000
+config_global_maximum_sell: 2147483647
 
 // Monster ทุกตัว Drop Item Id (ใส่ 0 เพื่อปิดการใช้งาน)
 config_global_drop: 0
@@ -58,7 +58,7 @@ config_all_item_trade: 1
 config_equipment_drop_auto_identify: 1
 
 // Monster ที่ Spawn ปกติมี Rank 0~(n-1)
-config_random_monster_rank: 91
+config_random_monster_rank: 3
 
 // ไม่นับคน Auto Trade (0 ไม่นับ)
 config_auto_trade_player_count: 0
@@ -66,19 +66,19 @@ config_auto_trade_player_count: 0
 // Rank ของ Monster จะเพิ่ม Damage ให้ Monster แบบใด
 // 0 = % ถ้า Rank 1 ก็เพิ่ม Damage 1%
 // 1 = คูณ ถ้า Rank 1 ก็ Damage คูณ 2
-config_monster_rank_damage_mode: 0
+config_monster_rank_damage_mode: 1
 
 // Rank ของ Monster จะลด Damage ที่ได้รับ แบบใด
 // 0 = % ถ้า Rank 1 ก็ลด Damage ที่ได้รับ 1% (แต่จะลดได้มากสุด 99% เพื่อไม่ให้เป็นอมตะ)
 // 1 = หาร ถ้า Rank 1 ก็ Damage ที่ได้รับ หาร 2
-config_monster_rank_defense_mode: 0
+config_monster_rank_defense_mode: 1
 
 // Rank ของ Monster จะเพิ่ม % EXP แบบใด
 // 0 = % ถ้า Rank 1 ก็เพิ่ม EXP 1%
 // 1 = คูณ ถ้า Rank 1 ก็ EXP คูณ 2
-config_monster_rank_exp_bonus_mode: 0
+config_monster_rank_exp_bonus_mode: 1
 
 // Rank ของ Monster จะเพิ่ม % Drop แบบใด
 // 0 = % ถ้า Rank 1 ก็เพิ่ม Drop 1%
 // 1 = คูณ ถ้า Rank 1 ก็ Drop คูณ 2
-config_monster_rank_drop_bonus_mode: 0
+config_monster_rank_drop_bonus_mode: 1

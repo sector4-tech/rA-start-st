@@ -1,0 +1,13 @@
+-	script	Tutorial	-1,{
+	message strcharinfo(0),
+	(strnpcinfo(2) == "1") ? "ทุก ๆ 10 นาที Map, Monster, x EXP, x DROP จะเปลี่ยน"
+	: "กระดานนี้ไม่ได้เขียนอะไรไว้"
+	;
+	end;
+	
+OnInit:
+	waitingroom strnpcinfo(0),0;
+	end;
+}
+
+prontera,156,245,4	duplicate(Tutorial)	กระดานแนะนำ#1	837

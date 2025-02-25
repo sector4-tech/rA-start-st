@@ -47,8 +47,23 @@ OnSetupMonsterId:
 		;
 		
 		// Setup EXP multiplier
-		set getd("$tbrExpMultiplier" + .@i),
-		(rand(100) < 10) ? 5	// 10%		EXP x5
+		setarray getd("$tbrExpMultiplier" + .@i + "[0]")
+		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		: (rand(100) < 20) ? 4	// 20%		EXP x4
+		: (rand(100) < 40) ? 3	// 40%		EXP x3
+		: (rand(100) < 80) ? 2	// 80%		EXP x2
+		: 1								// 100%	EXP x1
+		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		: (rand(100) < 20) ? 4	// 20%		EXP x4
+		: (rand(100) < 40) ? 3	// 40%		EXP x3
+		: (rand(100) < 80) ? 2	// 80%		EXP x2
+		: 1								// 100%	EXP x1
+		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		: (rand(100) < 20) ? 4	// 20%		EXP x4
+		: (rand(100) < 40) ? 3	// 40%		EXP x3
+		: (rand(100) < 80) ? 2	// 80%		EXP x2
+		: 1								// 100%	EXP x1
+		,(rand(100) < 10) ? 5	// 10%		EXP x5
 		: (rand(100) < 20) ? 4	// 20%		EXP x4
 		: (rand(100) < 40) ? 3	// 40%		EXP x3
 		: (rand(100) < 80) ? 2	// 80%		EXP x2
@@ -56,8 +71,23 @@ OnSetupMonsterId:
 		;
 		
 		// Setup Drop multiplier
-		set getd("$tbrDropMultiplier" + .@i),
-		(rand(100) < 5) ? 5		// 5%		Drop x5
+		setarray getd("$tbrDropMultiplier" + .@i + "[0]")
+		,(rand(100) < 5) ? 5		// 5%		Drop x5
+		: (rand(100) < 10) ? 4	// 10%		Drop x4
+		: (rand(100) < 20) ? 3	// 20%		Drop x3
+		: (rand(100) < 40) ? 2	// 40%		Drop x2
+		: 1								// 100%	Drop x1
+		,(rand(100) < 5) ? 5		// 5%		Drop x5
+		: (rand(100) < 10) ? 4	// 10%		Drop x4
+		: (rand(100) < 20) ? 3	// 20%		Drop x3
+		: (rand(100) < 40) ? 2	// 40%		Drop x2
+		: 1								// 100%	Drop x1
+		,(rand(100) < 5) ? 5		// 5%		Drop x5
+		: (rand(100) < 10) ? 4	// 10%		Drop x4
+		: (rand(100) < 20) ? 3	// 20%		Drop x3
+		: (rand(100) < 40) ? 2	// 40%		Drop x2
+		: 1								// 100%	Drop x1
+		,(rand(100) < 5) ? 5		// 5%		Drop x5
 		: (rand(100) < 10) ? 4	// 10%		Drop x4
 		: (rand(100) < 20) ? 3	// 20%		Drop x3
 		: (rand(100) < 40) ? 2	// 40%		Drop x2
@@ -81,6 +111,11 @@ OnSetupMonsterId:
 OnInit:
 	// Spawn amount per map
 	$tbrSpawnAmount = 150;
+	
+	// Clear playing map
+	deletearray $playingMaps[0],getarraysize($playingMaps);
+	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
+	deletearray $isTheBoxRoomBossDead[0],getarraysize($isTheBoxRoomBossDead);
 	
 	// First time initialize
 	if(!$isTheBoxRoomInit)

@@ -1,4 +1,7 @@
 -	script	Warp	-1,{
+	getmapxy(.@map$,.@x,.@y,BL_PC);
+	savepoint .@map$,.@x,.@y,2,2;
+	
 	specialeffect2 509;
 	
 	ClearTheBoxDebuff();
@@ -69,17 +72,38 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		,"^d8601b" + getmonsterinfo(.@monsterIds[3],MOB_NAME) + "^000000"
 		;
 		
+		// Information - Monster level
+		setarray .@monsterLevels[0]
+		,getmonsterinfo(.@monsterIds[0],MOB_LV)
+		,getmonsterinfo(.@monsterIds[1],MOB_LV)
+		,getmonsterinfo(.@monsterIds[2],MOB_LV)
+		,getmonsterinfo(.@monsterIds[3],MOB_LV)
+		;
+		
+		// Information - Monster EXP
+		setarray .@monsterEXPs[0]
+		,getmonsterinfo(.@monsterIds[0],MOB_BASEEXP)
+		,getmonsterinfo(.@monsterIds[1],MOB_BASEEXP)
+		,getmonsterinfo(.@monsterIds[2],MOB_BASEEXP)
+		,getmonsterinfo(.@monsterIds[3],MOB_BASEEXP)
+		;
+		
 		// Tell player here
 		mes "^1c9311ห้อง " + (.@i + 1) + "^000000"
-		+ "^000000\n• " + .@monsterNames$[0] + " (" + .@monsterIds[0] + ")"
-		+ "^000000\n• " + .@monsterNames$[1] + " (" + .@monsterIds[1] + ")"
-		+ "^000000\n• " + .@monsterNames$[2] + " (" + .@monsterIds[2] + ")" 
-		+ "^000000\n• " + .@monsterNames$[3] + " (" + .@monsterIds[3] + ")"
+		+ "^000000\n• " + .@monsterNames$[0] + " (" + .@monsterIds[0] + ") [Lv. ^f34516" + .@monsterLevels[0] + "^000000 | EXP ^00aaff" + KM(.@monsterEXPs[0] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[0]"))) + "^000000 | " + mesitemlink(THE_BOX_ITEM_ID) + " ^bb85ff" + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[0]")) + "%^000000]"
+		+ "^000000\n• " + .@monsterNames$[1] + " (" + .@monsterIds[1] + ") [Lv. ^f34516" + .@monsterLevels[1] + "^000000 | EXP ^00aaff" + KM(.@monsterEXPs[1] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[1]"))) + "^000000 | " + mesitemlink(THE_BOX_ITEM_ID) + " ^bb85ff" + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[1]")) + "%^000000]"
+		+ "^000000\n• " + .@monsterNames$[2] + " (" + .@monsterIds[2] + ") [Lv. ^f34516" + .@monsterLevels[2] + "^000000 | EXP ^00aaff" + KM(.@monsterEXPs[2] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[2]"))) + "^000000 | " + mesitemlink(THE_BOX_ITEM_ID) + " ^bb85ff" + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[2]")) + "%^000000]"
+		+ "^000000\n• " + .@monsterNames$[3] + " (" + .@monsterIds[3] + ") [Lv. ^f34516" + .@monsterLevels[3] + "^000000 | EXP ^00aaff" + KM(.@monsterEXPs[3] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[3]"))) + "^000000 | " + mesitemlink(THE_BOX_ITEM_ID) + " ^bb85ff" + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[3]")) + "%^000000]"
 		+ "^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "(โอกาสพบ 0.01%)"
 		;
 		
+		.@averageExp = ((.@monsterEXPs[0] + .@monsterEXPs[1] + .@monsterEXPs[2] + .@monsterEXPs[3])  / 4);
+		.@averageExpMultiplier = ((getd("$tbrExpMultiplier" + .@i + "[0]") + getd("$tbrExpMultiplier" + .@i + "[1]") + getd("$tbrExpMultiplier" + .@i + "[2]") + getd("$tbrExpMultiplier" + .@i + "[3]")) / 4);
+		.@averageDrop = ((getd("$tbrDropMultiplier" + .@i + "[0]") + getd("$tbrDropMultiplier" + .@i + "[1]") + getd("$tbrDropMultiplier" + .@i + "[2]") + getd("$tbrDropMultiplier" + .@i + "[3]")) / 4);
+		.@averageLv = ((.@monsterLevels[0] + .@monsterLevels[1] + .@monsterLevels[2] + .@monsterLevels[3])  / 4);
+		
 		// Menu creator
-		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ระดับความยาก " + .@difficulty + ") [EXP ^00aaff" + KM($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i)) + "^000000, Drop x " + getd("$tbrDropMultiplier" + .@i) + "]:";
+		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ระดับความยาก " + .@difficulty + ") [เฉลี่ย Monster Lv. ^f34516" + .@averageLv + "^000000 | EXP เฉลี่ย ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000 | เฉลี่ย Drop x^bb85ff" + .@averageDrop + "^000000]:";
 	}
 	
 	// Select room 1~5 from each tier
@@ -110,26 +134,47 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	end;
 	
 OnSpawnMore:
-	.@index = getarg(0,0);
+	.@room = getarg(0,0);
 	.@amount = getarg(1,0);
 	.@isNonBoss = getarg(2,1);
 	.@isBoss = getarg(3,1);
 	if(.@isNonBoss){
 		freeloop(1);
-		for(.@i = 0; .@i < .@amount; .@i++)
-		monster lastPlayMap$,0,0,"--ja--",getd("$tbrMID" + .@index + "[" + rand(0,3) + "]"),1,strnpcinfo(0) + "::OnMonsterDead";
+		for(.@i = 0; .@i < .@amount; .@i++){
+			.@monsterIndex = rand(0,3);
+			monster lastPlayMap$,0,0,"--ja--",getd("$tbrMID" + .@room + "[" + .@monsterIndex + "]"),1,"TheBoxRoom::OnMonsterDeadIndex" + .@monsterIndex;
+		}
 		freeloop(0);
 	}
-	if(.@isBoss && !$isTheBoxRoomBossDead[.@index])
-	monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@index),1,strnpcinfo(0) + "::OnBossDead";
+	if(.@isBoss && !$isTheBoxRoomBossDead[.@room])
+	monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@room),1,"TheBoxRoom::OnBossDead";
 	return;
 
-OnMonsterDead: callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
+OnMonsterDeadIndex0: callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
+OnMonsterDeadIndex1: callsub OnGetReward,1; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
+OnMonsterDeadIndex2: callsub OnGetReward,2; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
+OnMonsterDeadIndex3: callsub OnGetReward,3; callsub OnSpawnMore,lastPlayMap,1,1,0; end;
 OnBossDead: callsub OnGetReward,1; $isTheBoxRoomBossDead[lastPlayMap] = 1; end;
 
 OnGetReward:
-	.@isBoss = getarg(0,0);
+	.@monsterIndex = getarg(0,0);
+	.@isBoss = getarg(0,1);
+	
 	// Reward EXP
+	.@rewardExp = $expTiers[tier - 1] * getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]");
+	getexp .@rewardExp,.@rewardExp / 2;
+	
+	// Reward THE BOX
+	if (@tbDropDelay < gettimetick(2)){
+		.@tbDropChance = $tbDropRateTiers[tier - 1] * getd("$tbrDropMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]");
+		.@tbRand = rand(10000);
+		if(.@tbRand < .@tbDropChance){
+			@tbDropDelay = gettimetick(2) + 1;
+			getitem THE_BOX_ITEM_ID,1;
+		}
+		else
+		dispbottom "ต้องสุ่มได้ < " + .@tbDropChance + " คุณสุ่มได้ " + .@tbRand + " เพื่อรับ " + getitemname(THE_BOX_ITEM_ID);
+	}
 	return;
 	
 OnInit:
@@ -137,5 +182,23 @@ OnInit:
 	end;
 }
 
-prontera,148,238,5	duplicate(TheBoxRoom)	THE BOX ROOM#1	10558
-prontera,163,238,3	duplicate(TheBoxRoom)	THE BOX ROOM#2	10558
+prontera,148,232,5	duplicate(TheBoxRoom)	ห้อง#1	10558
+prontera,163,232,3	duplicate(TheBoxRoom)	ห้อง#2	10558
+prontera,148,236,5	duplicate(TheBoxRoom)	ห้อง#3	10558
+prontera,163,236,3	duplicate(TheBoxRoom)	ห้อง#4	10558
+prontera,148,240,5	duplicate(TheBoxRoom)	ห้อง#5	10558
+prontera,163,240,3	duplicate(TheBoxRoom)	ห้อง#6	10558
+prontera,148,244,5	duplicate(TheBoxRoom)	ห้อง#7	10558
+prontera,163,244,3	duplicate(TheBoxRoom)	ห้อง#8	10558
+prontera,148,248,5	duplicate(TheBoxRoom)	ห้อง#9	10558
+prontera,163,248,3	duplicate(TheBoxRoom)	ห้อง#10	10558
+prontera,148,252,5	duplicate(TheBoxRoom)	ห้อง#11	10558
+prontera,163,252,3	duplicate(TheBoxRoom)	ห้อง#12	10558
+prontera,148,256,5	duplicate(TheBoxRoom)	ห้อง#13	10558
+prontera,163,256,3	duplicate(TheBoxRoom)	ห้อง#14	10558
+prontera,148,260,5	duplicate(TheBoxRoom)	ห้อง#15	10558
+prontera,163,260,3	duplicate(TheBoxRoom)	ห้อง#16	10558
+prontera,148,264,5	duplicate(TheBoxRoom)	ห้อง#17	10558
+prontera,163,264,3	duplicate(TheBoxRoom)	ห้อง#18	10558
+prontera,148,268,5	duplicate(TheBoxRoom)	ห้อง#19	10558
+prontera,163,268,3	duplicate(TheBoxRoom)	ห้อง#20	10558
