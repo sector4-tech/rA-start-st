@@ -23,8 +23,9 @@ function	script	ApplyTired	{
 	return;
 }
 
-function	script	ResetTired	{
+function	script	ClearTheBoxDebuff	{
 	tired = 0;
+	bonusDebuff = 0;
 	ApplyTired();
 	return;
 }
@@ -630,4 +631,12 @@ function	script	GetAvailableMap	{
 		close;
 	}
 	return .@mapIndex;
+}
+
+function	script	BotMacroHint	{
+	dispbottom "• Bot & Macro == Ban 30 วัน",0xff8585;
+	dispbottom "• ใช้ Macro ต้องอยู่จอ^000000",0xff8585;
+	dispbottom "• เปิดเกมทิ้งไว้ (สาย AFK) ทำได้",0xacff85;
+	dispbottom "• เปิดเกมทิ้งไว้ (สาย Homunculus) ทำได้",0xacff85;
+	return;
 }

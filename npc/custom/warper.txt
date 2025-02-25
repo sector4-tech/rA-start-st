@@ -1,16 +1,10 @@
 -	script	Warp	-1,{
 	specialeffect2 509;
 	
-	tired = 0;
-	bonusDebuff = 0;
-	
-	ApplyTired();
-	
-	mes "• Bot & Macro == ^d32323Ban 30 วัน^000000";
-	mes "• ใช้ Macro ^d32323ต้องอยู่จอ^000000";
-	mes "• เปิดเกมทิ้งไว้ (^1c9311สาย AFK^000000) ทำได้";
-	mes "• เปิดเกมทิ้งไว้ (^1c9311สาย Homunculus^000000) ทำได้";
-	menu " ~ THE BOX ROOM",TheBoxRoom
+	ClearTheBoxDebuff();
+
+	menu
+	" ~ THE BOX ROOM",TheBoxRoom
 	," ~ ทดสอบ Damage",TestDamage
 	," ~ PvP [^af1ada" + getmapusers("pvp_n_1-3") + " คน^000000]",Pvp
 	," ~ PvP (Party ได้) [^af1ada" + getmapusers("pvp_n_1-5") + " คน^000000]",PvpParty
@@ -18,16 +12,47 @@
 	;
 	
 TheBoxRoom:
-	clear;
-	mes "ระบุ ระดับความยาก (1~20)";
-	next;
-	input .@difficulty;
-	if((.@difficulty <= 0) || (.@difficulty > 20)){
-		mes "ยกเลิกเรียบร้อยแล้ว";
-		close;
-	}
+	warp "prontera",156,236;
+	end;
 	
-	for(.@i = 0; .@i < 5; .@i++){
+TestDamage:
+	clear;
+	mes "ระบุ % ของเสื่อม";
+	next;
+	input bonusDebuff;
+	ApplyTired();
+	.@index = (select(" ~ ปกติ: ~ Rank 0: ~ Rank 10: ~ Rank 100: ~ Rank 1000") - 1);
+	setarray .@mapName$[0],"tra_fild","06guild_01","06guild_02","06guild_03","06guild_04";
+	warp .@mapName$[.@index],0,0;
+	end;
+	
+Pvp:
+	warp "pvp_n_1-3",0,0;
+	end;
+
+PvpParty:
+	warp "pvp_n_1-5",0,0;
+	end;
+
+PvpGuild:
+	warp "pvp_n_1-1",0,0;
+	end;
+}
+
+prontera,161,199,4	duplicate(Warp)	Warp#1	10558
+
+-	script	TheBoxRoom	-1,{
+	specialeffect2 509;
+	
+	ClearTheBoxDebuff();
+	
+	BotMacroHint();
+	
+	.@difficulty = strnpcinfo(2);
+	
+	.@index = 0 + (5 * (.@difficulty - 1));
+	
+	for(.@i = .@index; .@i < (.@index + 5); .@i++){
 		// Information - Monster ID
 		setarray .@monsterIds[0]
 		,getd("$tbrMID" + .@i + "[0]")
@@ -45,19 +70,17 @@ TheBoxRoom:
 		;
 		
 		// Tell player here
-		mes "^1c9311ห้อง " + (.@i + 1) + "^000000 [EXP ^00aaff" + KM($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i)) + "^000000, Drop x " + getd("$tbrDropMultiplier" + .@i) + "]"
+		mes "^1c9311ห้อง " + (.@i + 1) + "^000000"
 		+ "^000000\n• " + .@monsterNames$[0] + " (" + .@monsterIds[0] + ")"
 		+ "^000000\n• " + .@monsterNames$[1] + " (" + .@monsterIds[1] + ")"
 		+ "^000000\n• " + .@monsterNames$[2] + " (" + .@monsterIds[2] + ")" 
 		+ "^000000\n• " + .@monsterNames$[3] + " (" + .@monsterIds[3] + ")"
-		+ "^000000\n• โอกาสพบ ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "0.01%"
+		+ "^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "(โอกาสพบ 0.01%)"
 		;
 		
 		// Menu creator
-		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ระดับความยาก " + .@difficulty + "):";
+		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ระดับความยาก " + .@difficulty + ") [EXP ^00aaff" + KM($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i)) + "^000000, Drop x " + getd("$tbrDropMultiplier" + .@i) + "]:";
 	}
-	
-	next;
 	
 	// Select room 1~5 from each tier
 	.@index = (select(.@tbrMenu$) - 1);
@@ -97,7 +120,7 @@ OnSpawnMore:
 		monster lastPlayMap$,0,0,"--ja--",getd("$tbrMID" + .@index + "[" + rand(0,3) + "]"),1,strnpcinfo(0) + "::OnMonsterDead";
 		freeloop(0);
 	}
-	if(.@isBoss && !$isTheBoxRoomBossDead[.@index]))
+	if(.@isBoss && !$isTheBoxRoomBossDead[.@index])
 	monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@index),1,strnpcinfo(0) + "::OnBossDead";
 	return;
 
@@ -109,28 +132,10 @@ OnGetReward:
 	// Reward EXP
 	return;
 	
-TestDamage:
-	clear;
-	mes "ระบุ % ของเสื่อม";
-	next;
-	input bonusDebuff;
-	ApplyTired();
-	.@index = (select(" ~ ปกติ: ~ Rank 0: ~ Rank 10: ~ Rank 100: ~ Rank 1000") - 1);
-	setarray .@mapName$[0],"tra_fild","06guild_01","06guild_02","06guild_03","06guild_04";
-	warp .@mapName$[.@index],0,0;
-	end;
-	
-Pvp:
-	warp "pvp_n_1-3",0,0;
-	end;
-
-PvpParty:
-	warp "pvp_n_1-5",0,0;
-	end;
-
-PvpGuild:
-	warp "pvp_n_1-1",0,0;
+OnInit:
+	waitingroom strnpcinfo(0),0;
 	end;
 }
 
-prontera,161,199,4	duplicate(Warp)	Warp#prt	10558 
+prontera,148,238,5	duplicate(TheBoxRoom)	THE BOX ROOM#1	10558
+prontera,163,238,3	duplicate(TheBoxRoom)	THE BOX ROOM#2	10558

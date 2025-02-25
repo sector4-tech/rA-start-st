@@ -2,7 +2,7 @@
 // Spawn monster when player enter to reduce RAM usage
 // Spawn +1 more on monster dead -> also check boss spawn if not spawn yet -> If chance passed -> Mark boss spawn -> Boss dead -> Mark boss dead
 // Every 10 minutes -> Move players to prontera (No custom map player are move) -> Map clean up -> Setup monster id each room
--	script	TheBoxRoom	-1,{
+-	script	TheBoxRoomDatabase	-1,{
 	end;
 	
 OnMinute00:

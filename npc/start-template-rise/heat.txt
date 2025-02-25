@@ -69,11 +69,9 @@ OnInit:
 	end;
 	
 	OnTouch:
-	ptt = 0;
 	tired = cap_value(90,0,100);
 	if('bonusDebuff)
 	bonusDebuff = cap_value('bonusDebuff,0,100);
-	tiredSpot = rand(1,16);
 	ApplyTired();
 	@isOnlyGodEnter = 1;
 	end;

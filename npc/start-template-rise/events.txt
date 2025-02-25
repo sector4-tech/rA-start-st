@@ -17,15 +17,14 @@ OnPCLogoutEvent:
 	
 OnPCLoadMapEvent:
 	if(strcharinfo(3) == "prontera"){
-		if(bonusDebuff){
-			bonusDebuff = 0;
-			ApplyTired();
-		}
+		if(bonusDebuff)
+		ClearTheBoxDebuff();
+		
 		atcommand "@cleartimetick";
-		if(@isOnlyGodEnter){
-			@isOnlyGodEnter = 0;
-			ResetTired();
-		}
+		
+		if(@isOnlyGodEnter)
+		@isOnlyGodEnter = 0;
+		
 		.@oldInstanceId = instance_id(IM_CHAR);
 		if(.@oldInstanceId)
 		instance_destroy .@oldInstanceId;
@@ -66,7 +65,7 @@ OnLoad:
 		setpcblock PCBLOCK_ALL,false;
 		atcommand "@follow";
 		atcommand "@speed 200";
-		ResetTired();
+		ClearTheBoxDebuff();
 		dispbottom "หยุดติดตาม " + strcharinfo(0,followCID);
 		@isFollow = 0;
 	}
