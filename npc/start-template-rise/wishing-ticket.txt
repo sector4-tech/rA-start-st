@@ -1,15 +1,10 @@
 prontera,147,171,6	script	THE BOX	10308,{
-	mes "ใช้ " + mesitemlink(THE_BOX_ITEM_ID,true) + " ในการสุ่ม";
-	mes "Weapon ใช้ [^af1ada" + F_InsertComma(.@weaponCost) + " ชิ้น^000000]";
-	mes "Armor ใช้ [^af1ada" + F_InsertComma(.@equipmentCost) + " ชิ้น^000000]";
-	mes "Card ใช้ [^af1ada" + F_InsertComma(.@cardCost) + " ชิ้น^000000]";
-	mes "Enchantment ใช้ [^af1ada" + F_InsertComma(.@enchantmentCost) + " ชิ้น^000000]";
-	.@wishingTicketAmount = countitem(THE_BOX_ITEM_ID);
-	if(!.@wishingTicketAmount){
-		next;
-		mes mesitemlink(THE_BOX_ITEM_ID,true) + " ไม่เพียงพอ";
-		close;		
-	}
+	mes "ในการสุ่ม";
+	mes "Weapon ใช้ " + mesitemlink(WEAPON_KEY_ITEM_ID);
+	mes "Armor ใช้ " + mesitemlink(EQUIPMENT_KEY_ITEM_ID);
+	mes "Costume ใช้ " + mesitemlink(COSTUME_KEY_ITEM_ID);
+	mes "Card ใช้ " + mesitemlink(CARD_KEY_ITEM_ID);
+	mes "Enchantment ใช้ " + mesitemlink(ENCHANTMENT_KEY_ITEM_ID);
 	next;
 	menu
 	"Weapon",-
@@ -18,11 +13,15 @@ prontera,147,171,6	script	THE BOX	10308,{
 	,"Enchantment",L_Enchantment
 	;
 	
+	@keyItemId = WEAPON_KEY_ITEM_ID;
+	callsub L_KeyChecker;
+	
 	setarray .@subType$[0],"One-Handed Sword","Two-Handed Sword","Dagger","Katar","One-Handed Axe","Two-Handed Axe","Huuma","Mace","One-Handed Spear","Two-Handed Spear","Two-Handed Staff","Book","Staff","Bow","Knuckle","Musical","Whip","Revolver","Rifle","Shotgun","Gatling Gun","Grenade Launcher";
 	for(.@i = 0; .@i < getarraysize(.@subType$); .@i++)
 	.@menu$ += .@subType$[.@i] + ":";
 
 	.@index = (select(.@menu$) - 1);
+	
 	.@saveIndex = .@index;
 	if(.@index >= 14)
 	.@index++;
@@ -44,28 +43,34 @@ prontera,147,171,6	script	THE BOX	10308,{
 	.@variableName$ = $location$[.@index];
 	.@cost = .@equipmentCost;
 	.@mes$ = "ต้องการสุ่ม " + .@location$[.@index] + " กี่รอบ?";
+	
+	@keyItemId = (compare(.@location$[.@index],"COSTUME") || compare(.@location$[.@index],"SHADOW")) ? COSTUME_KEY_ITEM_ID : EQUIPMENT_KEY_ITEM_ID;
+	dispbottom getitemname(@keyItemId);
+	callsub L_KeyChecker;
 	goto L_Confirmation;
 	
 	L_Card:
+	@keyItemId = CARD_KEY_ITEM_ID;
+	callsub L_KeyChecker;
+	
 	.@variableName$ = "card2Ids";
 	.@cost = .@cardCost;
 	.@mes$ = "ต้องการสุ่ม Card กี่รอบ?";
 	goto L_Confirmation;
 	
 	L_Enchantment:
+	@keyItemId = ENCHANTMENT_KEY_ITEM_ID;
+	callsub L_KeyChecker;
+	
 	.@variableName$ = "enchant2Ids";
 	.@cost = .@enchantmentCost;
 	.@mes$ = "ต้องการสุ่ม Enchantment กี่รอบ?";
 	goto L_Confirmation;
 	
 	L_Confirmation:
-	.@wishingTicketAmount = .@wishingTicketAmount / .@cost;
-	if(!.@wishingTicketAmount){
-		mes mesitemlink(THE_BOX_ITEM_ID,true) + " ไม่เพียงพอ";
-		close;		
-	}
+	.@keyAmount = countitem(@keyItemId);
 	mes .@mes$;
-	mes "(0~" + F_InsertComma(.@wishingTicketAmount) + ")";
+	mes "(0~" + F_InsertComma(.@keyAmount) + ")";
 	mes "^d32323(ระบุ 99999 เพื่อใช้ระบบ สุ่มแล้วทิ้งจนกว่าจะเจอ Item ที่ต้องการ)^000000";
 	mes "^1c9311(หากมี " + mesitemlink(GOD_TICKET_ITEM_ID,true) + " จะทำให้เจอง่ายขึ้น 20%)^000000";
 	input .@i;
@@ -74,6 +79,7 @@ prontera,147,171,6	script	THE BOX	10308,{
 		input .@wishItemId;
 		clear;
 		if(.@wishItemId <= 0){
+			clear;
 			mes "ยกเลิกเรียบร้อยแล้ว";
 			close;
 		}
@@ -86,18 +92,20 @@ prontera,147,171,6	script	THE BOX	10308,{
 		}
 		freeloop(0);
 		if(!.@isFoundWishItemId){
+			clear;
 			mes "ยกเลิกเรียบร้อยแล้ว";
 			close;
 		}
-		mes "คุณต้องการ " + mesitemlink(.@wishItemId,true);
-		mes "ใช้ [^af1ada" + mesitemlink(THE_BOX_ITEM_ID,true) + " " + F_InsertComma(.@cost) + " ชิ้น^000000] ไปเรื่อย ๆ จนกว่าจะเจอ";
+		mes "คุณต้องการ " + mesitemlink(.@wishItemId);
+		mes "ใช้ " + mesitemlink(@keyItemId) + " ไปเรื่อย ๆ จนกว่าจะเจอ";
 		next;
 		menu "ยกเลิก",-,"ยืนยัน",L_WishConfirm;
 		close;
 		L_WishConfirm:
-		.@i = .@wishingTicketAmount;
+		.@i = .@keyAmount;
 	}
-	if((.@i <= 0) || (.@i > .@wishingTicketAmount)){
+	if((.@i <= 0) || (.@i > .@keyAmount)){
+		clear;
 		mes "ยกเลิกเรียบร้อยแล้ว";
 		close;
 	}
@@ -109,7 +117,7 @@ prontera,147,171,6	script	THE BOX	10308,{
 			close;
 		}
 		.@i--;
-		delitem THE_BOX_ITEM_ID,.@cost;
+		delitem @keyItemId,1;
 		if(.@wishItemId){
 			if(countitem(GOD_TICKET_ITEM_ID)){
 				delitem GOD_TICKET_ITEM_ID,1;
@@ -138,15 +146,13 @@ prontera,147,171,6	script	THE BOX	10308,{
 	freeloop(0);
 	close;
 	
-	L_EndOfService:
-	mes "ระบุ Item ID ที่ต้องการ";
-	next;
-	input .@itemId;
-	mes "ระบุจำนวน Item ที่ต้องการ";
-	next;
-	input .@itemAmount;
-	getitem .@itemId,.@itemAmount;
-	close;
+	L_KeyChecker:
+	@keyAmount = countitem(@keyItemId);
+	if(!@keyAmount){
+		mes mesitemlink(@keyItemId) + " ไม่เพียงพอ";
+		close;		
+	}
+	return;
 	
 OnInit:
 	waitingroom "สุ่มรับ Item",0;
