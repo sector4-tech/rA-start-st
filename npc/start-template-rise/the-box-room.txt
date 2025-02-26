@@ -29,7 +29,7 @@ OnSetupMonsterId:
 	for(.@i = 0; .@i < 100; .@i++)
 	killmonsterall $maps$[$playingMaps[.@i]];
 	
-	// Clear playing map
+	// Clear playing map, monster and boss
 	deletearray $playingMaps[0],getarraysize($playingMaps);
 	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
 	deletearray $isBossAlive[0],getarraysize($isBossAlive);
@@ -123,8 +123,7 @@ OnInit:
 	// Spawn amount per map
 	$tbrSpawnAmount = 150;
 	
-	// Clear playing map
-	deletearray $playingMaps[0],getarraysize($playingMaps);
+	// Clear monster and boss
 	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
 	deletearray $isBossAlive[0],getarraysize($isBossAlive);
 	deletearray $tbrBossGID[0],getarraysize($tbrBossGID);

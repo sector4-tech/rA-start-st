@@ -120,6 +120,12 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	tier = .@difficulty;
 	// Warp now
 	warp lastPlayMap$,0,0;
+	if((tier % 2) == 0)
+	{
+		tired = 50;
+		bonusDebuff = 50;
+		ApplyTired();
+	}
 	
 	// Spawn if need
 	if(!$isMapSpawnMonster[lastPlayMap]){
