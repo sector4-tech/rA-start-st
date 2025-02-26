@@ -11,8 +11,11 @@ OnMinute20:
 OnMinute30:
 OnMinute40:
 OnMinute50:
+
 	// Every 10 minutes -> Re-initialize
 	$isTheBoxRoomInit = 0;
+	
+	.@isTenMinuteFire = 1;
 	
 OnSetupMonsterId:
 	// Check if already initialize
@@ -29,7 +32,7 @@ OnSetupMonsterId:
 	// Clear playing map
 	deletearray $playingMaps[0],getarraysize($playingMaps);
 	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
-	deletearray $isTheBoxRoomBossDead[0],getarraysize($isTheBoxRoomBossDead);
+	deletearray $isBossAlive[0],getarraysize($isBossAlive);
 	
 	// Loop 100 rooms
 	for(.@i = 0; .@i < 100; .@i++){
@@ -96,6 +99,8 @@ OnSetupMonsterId:
 		
 		// Setup boss
 		set getd("$tbrBMID" + .@i),$mvpIds[rand(getarraysize($mvpIds))];
+		// Setup boss spawn rate (Only for room 31+)
+		set getd("$tbrBossRate" + .@i),(.@i <= 30) ? 0 : .@i - 30;
 		
 		// Setup map
 		$playingMaps[.@i] = callfunc("GetAvailableMap");
@@ -105,6 +110,11 @@ OnSetupMonsterId:
 	
 	// Mark as initialized
 	$isTheBoxRoomInit = 1;
+	if(.@isTenMinuteFire){
+		addrid(0);
+		if(!IsCustomMap(strcharinfo(3)))
+		announce "Map ถูก Reset แล้ว.. สามารถกลับเมืองด้วยคำสั่ง @load",bc_self;
+	}
 	
 	end;
 
@@ -115,7 +125,7 @@ OnInit:
 	// Clear playing map
 	deletearray $playingMaps[0],getarraysize($playingMaps);
 	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
-	deletearray $isTheBoxRoomBossDead[0],getarraysize($isTheBoxRoomBossDead);
+	deletearray $isBossAlive[0],getarraysize($isBossAlive);
 	
 	// First time initialize
 	if(!$isTheBoxRoomInit)

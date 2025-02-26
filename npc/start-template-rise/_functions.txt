@@ -60,8 +60,10 @@ function	script	StringBase10000	{
 	return ("0.0" + .@value);
 	else if(.@value < 100)
 	return ("0." + (.@value / 10));
-	else if(.@value < 1000)
-	return insertchar((.@value / 10),".",1);
+	else if(.@value < 1000){
+		.@string$ = "" + (.@value / 10);
+		return insertchar(.@string$,".",1);
+	}
 	else
 	return (.@value /= 100);
 }
