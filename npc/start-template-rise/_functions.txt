@@ -642,3 +642,32 @@ function	script	BotMacroHint	{
 	dispbottom "• เปิดเกมทิ้งไว้ (สาย Homunculus) ทำได้",0xacff85;
 	return;
 }
+
+function	script	TheBox	{
+	.@loop = #IS_ONE_TAP_OPEN ? countitem(THE_BOX_ITEM_ID) : 1;
+	
+	freeloop(1);
+	
+	while(.@loop > 0){
+		.@loop--;
+		
+		if(IsInventoryFull() || (countitem(THE_BOX_ITEM_ID) <= 0)){
+			dispbottom "เกิดข้อผิดพลาด: โปรดตรวจสอบช่องว่างในกระเป๋า",0xff8585;
+			return;
+		}
+		
+		delitem THE_BOX_ITEM_ID,1;
+		
+		.@tbRewardRand = rand(100);
+		getitem ((.@tbRewardRand < 30) ? COSTUME_KEY_ITEM_ID
+		: (.@tbRewardRand < 60) ? EQUIPMENT_KEY_ITEM_ID
+		: (.@tbRewardRand < 90) ? WEAPON_KEY_ITEM_ID
+		: (.@tbRewardRand < 97) ? CARD_KEY_ITEM_ID
+		: ENCHANTMENT_KEY_ITEM_ID)
+		,1;
+	}
+
+	freeloop(0);
+
+	return;
+}
