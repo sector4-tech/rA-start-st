@@ -40,7 +40,7 @@ OnInit:
 	bindatcmd "ll",strnpcinfo(3) + "::OnLastFollowPlayerLoad",99,99;
 	bindatcmd "ml",strnpcinfo(3) + "::OnMapLoad",99,99;
 	
-	addrid(0);
+	addrid(0,1);
 	if(!IsCustomMap(strcharinfo(3)))
 	warp "Save",0,0;
 	end;

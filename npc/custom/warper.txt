@@ -56,6 +56,7 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	.@index = 0 + (5 * (.@difficulty - 1));
 	
 	.@tbItemName$ = getitemname(THE_BOX_ITEM_ID);
+	.@rhpItemName$ = getitemname(REFINE_HACK_POWDER_ITEM_ID);
 	
 	for(.@i = .@index; .@i < (.@index + 5); .@i++){
 		// Information - Monster ID
@@ -90,7 +91,7 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		,getmonsterinfo(.@monsterIds[3],MOB_BASEEXP)
 		;
 		// Tell player here
-		.@bossHint$ = ((getd("$tbrBossRate" + .@i) > 0) ? ("^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "(โอกาสพบ " + StringBase10000(getd("$tbrBossRate" + .@i)) + "%)") : "");
+		.@bossHint$ = ((getd("$tbrBossRate" + .@i) > 0) ? ("^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ") (^ff0000Rank " + (.@difficulty * $bossRankMultiplier) + "^000000)\n-> โอกาสเกิด " + StringBase10000(getd("$tbrBossRate" + .@i)) + "%\n-> ^b600ff" + .@rhpItemName$ + " " +  StringBase10000(.@difficulty * $rhpMultiplier) + "%^000000") : "");
 		mes "^1c9311---------- ห้อง " + (.@i + 1) + " ----------^000000"
 		+ "^000000\n• " + .@monsterNames$[0] + "(" + .@monsterIds[0] + ")\n[^818181Lv. " + .@monsterLevels[0] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[0] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[0]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[0]")) + "%^000000]"
 		+ "^000000\n• " + .@monsterNames$[1] + "(" + .@monsterIds[1] + ")\n[^818181Lv. " + .@monsterLevels[1] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[1] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[1]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[1]")) + "%^000000]"
@@ -161,6 +162,7 @@ OnSpawnMore:
 	if(.@isBoss && !$isBossAlive[.@room]){
 		monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@room),1,"TheBoxRoom::OnBossDead";
 		$tbrBossGID[lastPlayMap] = $@mobid[0];
+		setunitdata $tbrBossGID[lastPlayMap],UMOB_RANK,tier * $bossRankMultiplier;
 		$isBossAlive[.@room] = 1;
 		announce getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " เกิดแล้ว!",bc_map;
 	}
@@ -182,11 +184,11 @@ OnTryToSpawnBoss:
 	if($isBossAlive[lastPlayMap])
 	return;
 
-	if(rand(2) < getd("$tbrBossRate" + lastPlayMap)){
+	if(rand(10000) < getd("$tbrBossRate" + lastPlayMap)){
 		callsub OnSpawnMore,lastPlayMap,1,0,1;
 		
 		getunitdata($tbrBossGID[lastPlayMap],.bossDatas);
-		addrid(1);
+		addrid(1,1);
 		viewpoint 1,.bossDatas[UMOB_X],.bossDatas[UMOB_Y],1,0xFF0000;
 	}
 	
@@ -200,13 +202,22 @@ OnGetReward:
 	.@rewardExp = $expTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"));
 	getexp .@rewardExp,.@rewardExp / 2;
 	
+	// Reward Refine Hack Powder ( Difficult / 4 ) %
+	if(.@isBoss){
+		.@rhpRand = rand(10000);
+		if(.@rhpRand < (tier * $rhpMultiplier))
+		getitem REFINE_HACK_POWDER_ITEM_ID,1;
+		else
+		dispbottom "ต้องสุ่มได้ < " + (tier * $rhpMultiplier) + " เพื่อรับ " + getitemname(REFINE_HACK_POWDER_ITEM_ID) + " คุณสุ่มได้ " + .@rhpRand;
+	}
+	
 	// Reward THE BOX
-	if (@tbDropDelay < gettimetick(2)){
-		.@tbDropChance = $tbDropRateTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrDropMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"));
+	if ((@tbDropDelay < gettimetick(2)) || .@isBoss){
+		.@tbDropChance = $tbDropRateTiers[tier - 1] * getd("$tbrDropMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]");
 		.@tbRand = rand(10000);
-		if(.@tbRand < .@tbDropChance){
+		if((.@tbRand < .@tbDropChance) || .@isBoss){
 			@tbDropDelay = gettimetick(2) + 1;
-			getitem THE_BOX_ITEM_ID,1;
+			getitem THE_BOX_ITEM_ID,.@isBoss ? rand(1,max(2,getd("$tbrBossRate" + lastPlayMap))) : 1;
 		}
 		else
 		dispbottom "ต้องสุ่มได้ < " + .@tbDropChance + " เพื่อรับ " + getitemname(THE_BOX_ITEM_ID) + " คุณสุ่มได้ " + .@tbRand;
@@ -214,6 +225,8 @@ OnGetReward:
 	return;
 	
 OnInit:
+	$rhpMultiplier = 200;
+	$bossRankMultiplier = 2;
 	waitingroom strnpcinfo(0),0;
 	end;
 }
