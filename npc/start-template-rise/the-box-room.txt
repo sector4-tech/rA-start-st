@@ -33,6 +33,7 @@ OnSetupMonsterId:
 	deletearray $playingMaps[0],getarraysize($playingMaps);
 	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
 	deletearray $isBossAlive[0],getarraysize($isBossAlive);
+	deletearray $tbrBossGID[0],getarraysize($tbrBossGID);
 	
 	// Loop 100 rooms
 	for(.@i = 0; .@i < 100; .@i++){
@@ -100,7 +101,7 @@ OnSetupMonsterId:
 		// Setup boss
 		set getd("$tbrBMID" + .@i),$mvpIds[rand(getarraysize($mvpIds))];
 		// Setup boss spawn rate (Only for room 31+)
-		set getd("$tbrBossRate" + .@i),(.@i <= 30) ? 0 : .@i - 30;
+		set getd("$tbrBossRate" + .@i),(.@i < 30) ? 0 : .@i - 29;
 		
 		// Setup map
 		$playingMaps[.@i] = callfunc("GetAvailableMap");
@@ -126,6 +127,7 @@ OnInit:
 	deletearray $playingMaps[0],getarraysize($playingMaps);
 	deletearray $isMapSpawnMonster[0],getarraysize($isMapSpawnMonster);
 	deletearray $isBossAlive[0],getarraysize($isBossAlive);
+	deletearray $tbrBossGID[0],getarraysize($tbrBossGID);
 	
 	// First time initialize
 	if(!$isTheBoxRoomInit)

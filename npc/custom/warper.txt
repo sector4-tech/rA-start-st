@@ -90,8 +90,8 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		,getmonsterinfo(.@monsterIds[3],MOB_BASEEXP)
 		;
 		// Tell player here
-		.@bossHint$ = ((getd("$tbrBossRate" + (.@i + 1)) > 0) ? ("^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "(โอกาสพบ " + StringBase10000(getd("$tbrBossRate" + (.@i + 1))) + "%)") : "");
-		mes "^1c9311ห้อง " + (.@i + 1) + "^000000"
+		.@bossHint$ = ((getd("$tbrBossRate" + .@i) > 0) ? ("^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ")"+ " " + "(โอกาสพบ " + StringBase10000(getd("$tbrBossRate" + .@i)) + "%)") : "");
+		mes "^1c9311---------- ห้อง " + (.@i + 1) + " ----------^000000"
 		+ "^000000\n• " + .@monsterNames$[0] + "(" + .@monsterIds[0] + ")\n[^818181Lv. " + .@monsterLevels[0] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[0] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[0]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[0]")) + "%^000000]"
 		+ "^000000\n• " + .@monsterNames$[1] + "(" + .@monsterIds[1] + ")\n[^818181Lv. " + .@monsterLevels[1] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[1] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[1]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[1]")) + "%^000000]"
 		+ "^000000\n• " + .@monsterNames$[2] + "(" + .@monsterIds[2] + ")\n[^818181Lv. " + .@monsterLevels[2] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[2] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[2]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[2]")) + "%^000000]"
@@ -110,10 +110,9 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	// Select room 1~5 from each tier
 	.@index = (select(.@tbrMenu$) - 1);
 	// Get actual map index
-	.@room = .@index * (cap_value(.@difficulty - 1,1,INT_MAX));
+	.@room = (.@index) + (5 * (.@difficulty - 1));
 	// Remember last play map index
 	lastPlayMap = .@room;
-	
 	// Remember last play map name
 	lastPlayMap$ = $maps$[$playingMaps[.@room]];
 	// Remember last play map tier
@@ -138,8 +137,12 @@ OnWarped:
 	.@min -= 10;
 	dispbottom "เหลือเวลาอีก " + (10 - ((.@min == 10) ? 0 : .@min)) + " นาที ก่อนที่ Map จะถูก Reset";
 
-	if($isBossAlive[lastPlayMap])
-	announce getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " ยังมีชีวิตอยู่..",bc_self;
+	if($isBossAlive[lastPlayMap]){
+		announce getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " ยังมีชีวิตอยู่..",bc_self;
+		getunitdata($tbrBossGID[lastPlayMap],.@bossDatas);
+		viewpoint 1,.@bossDatas[UMOB_X],.@bossDatas[UMOB_Y],1,0xFF0000;
+	}
+	
 	end;
 	
 OnSpawnMore:
@@ -155,32 +158,43 @@ OnSpawnMore:
 		}
 		freeloop(0);
 	}
-	if(.@isBoss && !$isBossAlive[.@room])
-	monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@room),1,"TheBoxRoom::OnBossDead";
+	if(.@isBoss && !$isBossAlive[.@room]){
+		monster lastPlayMap$,0,0,"--ja--",getd("$tbrBMID" + .@room),1,"TheBoxRoom::OnBossDead";
+		$tbrBossGID[lastPlayMap] = $@mobid[0];
+		$isBossAlive[.@room] = 1;
+		announce getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " เกิดแล้ว!",bc_map;
+	}
+
 	return;
 
 OnMonsterDeadIndex0: callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
 OnMonsterDeadIndex1: callsub OnGetReward,1; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
 OnMonsterDeadIndex2: callsub OnGetReward,2; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
 OnMonsterDeadIndex3: callsub OnGetReward,3; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
-OnBossDead: callsub OnGetReward,0,1; $isBossAlive[lastPlayMap] = 0; end;
+OnBossDead:
+	announce strcharinfo(0) + " ได้กำจัด " + getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " ลงแล้ว!",bc_map;
+	callsub OnGetReward,0,1;
+	$isBossAlive[lastPlayMap] = 0;
+	end;
 
 OnTryToSpawnBoss:
 	// Boss still alive
 	if($isBossAlive[lastPlayMap])
 	return;
 
-	if(rand(10000) < getd("$tbrBossRate" + lastPlayMap)){
+	if(rand(2) < getd("$tbrBossRate" + lastPlayMap)){
 		callsub OnSpawnMore,lastPlayMap,1,0,1;
-		$isBossAlive[lastPlayMap] = 1;
-		announce getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + "เกิดแล้ว!",bc_map;
+		
+		getunitdata($tbrBossGID[lastPlayMap],.bossDatas);
+		addrid(1);
+		viewpoint 1,.bossDatas[UMOB_X],.bossDatas[UMOB_Y],1,0xFF0000;
 	}
 	
 	return;
 
 OnGetReward:
 	.@monsterIndex = getarg(0,0);
-	.@isBoss = getarg(0,1);
+	.@isBoss = getarg(1,0);
 	
 	// Reward EXP
 	.@rewardExp = $expTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"));
