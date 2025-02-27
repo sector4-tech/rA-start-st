@@ -651,7 +651,7 @@ function	script	TheBox	{
 	while(.@loop > 0){
 		.@loop--;
 		
-		if(IsInventoryFull()){
+		if(IsInventoryFull() || (countitem(THE_BOX_ITEM_ID) <= 0)){
 			dispbottom "เกิดข้อผิดพลาด: โปรดตรวจสอบช่องว่างในกระเป๋า",0xff8585;
 			return;
 		}
