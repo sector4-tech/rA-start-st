@@ -10,4 +10,4 @@ OnInit:
 	end;
 }
 
-prontera,156,245,4	duplicate(Tutorial)	กระดานแนะนำ#1	837
+prontera,156,225,4	duplicate(Tutorial)	กระดานแนะนำ#1	837

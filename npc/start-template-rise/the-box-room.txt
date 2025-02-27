@@ -116,12 +116,18 @@ OnSetupMonsterId:
 	$isTheBoxRoomInit = 1;
 	if(.@isTenMinuteFire){
 		addrid(0,1);
-		if(!IsCustomMap(strcharinfo(3)))
-		announce "Map ถูก Reset แล้ว.. สามารถกลับเมืองด้วยคำสั่ง @load",bc_self;
+		if(!IsCustomMap(strcharinfo(3))){
+			announce "Map ถูก Reset แล้ว..",bc_self;
+			addtimer 1000,strnpcinfo(0) + "::OnMapResetWarp";
+		}
 	}
 	
 	end;
 
+OnMapResetWarp:
+	warp "Save",0,0;
+	end;
+	
 OnInit:
 	// Spawn amount per map
 	$tbrSpawnAmount = 150;
