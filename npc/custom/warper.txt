@@ -125,15 +125,14 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		.@min -= 10;
 		sc_start SC_ITEMBOOST,60 * (1000 * (10 - ((.@min == 10) ? 0 : .@min))),$tbrNormalDropMultiplier[lastPlayMap];
 	}
-	// Warp now
-	warp lastPlayMap$,0,0;
+	
 	if((tier % 2) == 0)
 	{
 		tired = 50;
 		bonusDebuff = 50;
 		ApplyTired();
 	}
-	
+
 	// Spawn if need
 	if(!$isMapSpawnMonster[lastPlayMap]){
 		callsub OnSpawnMore,lastPlayMap,$tbrSpawnAmount;
@@ -142,10 +141,16 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	}
 	
 	addtimer 2000,strnpcinfo(0) + "::OnWarped";
+
+	// Warp now
+	warp lastPlayMap$,0,0;
 	
 	end;
 	
 OnWarped:
+	if(!playerattached())
+	end;
+
 	.@min = gettime(DT_MINUTE);
 	while(.@min > 10)
 	.@min -= 10;
@@ -182,10 +187,10 @@ OnSpawnMore:
 
 	return;
 
-OnMonsterDeadIndex0: callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
-OnMonsterDeadIndex1: callsub OnGetReward,1; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
-OnMonsterDeadIndex2: callsub OnGetReward,2; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
-OnMonsterDeadIndex3: callsub OnGetReward,3; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
+OnMonsterDeadIndex0: if(!playerattached()) end; callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
+OnMonsterDeadIndex1: if(!playerattached()) end; callsub OnGetReward,1; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
+OnMonsterDeadIndex2: if(!playerattached()) end; callsub OnGetReward,2; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
+OnMonsterDeadIndex3: if(!playerattached()) end; callsub OnGetReward,3; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
 OnBossDead:
 	announce strcharinfo(0) + " ได้กำจัด " + getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " ลงแล้ว!",bc_map;
 	callsub OnGetReward,0,1;

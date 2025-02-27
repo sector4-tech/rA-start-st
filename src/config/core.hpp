@@ -23,7 +23,7 @@
 /// before attacking and monsters will just drop target once they get in attack range and can't attack.
 /// If disabled, the server automatically makes sure units find a position to attack from by moving closer.
 /// Disabling this also stops skills from failing when the target has walked behind an obstacle during cast.
-//#define OFFICIAL_WALKPATH
+#define OFFICIAL_WALKPATH
 
 /// Uncomment to enable the Cell Stack Limit mod.
 /// It's only config is the battle_config custom_cell_stack_limit.
