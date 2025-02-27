@@ -9,6 +9,13 @@ OnPCLoginEvent:
 
 	donpcevent "เปลี่ยน Save Point::OnRefreshOnlineAmount";
 	
+	if(!IsCustomMap(strcharinfo(3)))
+	addtimer 1000,strnpcinfo(0) + "::OnLoginWarp";
+	
+	end;
+	
+OnLoginWarp:
+	warp "Save",0,0;
 	end;
 	
 OnPCLogoutEvent:

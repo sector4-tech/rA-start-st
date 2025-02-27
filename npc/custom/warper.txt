@@ -118,6 +118,13 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	lastPlayMap$ = $maps$[$playingMaps[.@room]];
 	// Remember last play map tier
 	tier = .@difficulty;
+	// Add x DROP
+	if($tbrNormalDropMultiplier[.@i] > getstatus(SC_ITEMBOOST,1)){
+		.@min = gettime(DT_MINUTE);
+		while(.@min > 10)
+		.@min -= 10;
+		sc_start SC_ITEMBOOST,60 * (1000 * (10 - ((.@min == 10) ? 0 : .@min))),$tbrNormalDropMultiplier[lastPlayMap];
+	}
 	// Warp now
 	warp lastPlayMap$,0,0;
 	if((tier % 2) == 0)

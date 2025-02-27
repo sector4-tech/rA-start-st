@@ -103,6 +103,9 @@ OnSetupMonsterId:
 		// Setup boss spawn rate (Only for room 31+)
 		set getd("$tbrBossRate" + .@i),(.@i < 30) ? 0 : .@i - 29;
 		
+		// Setup x DROP
+		$tbrNormalDropMultiplier[.@i] = rand(0,200);
+		
 		// Setup map
 		$playingMaps[.@i] = callfunc("GetAvailableMap");
 	}
