@@ -6,7 +6,7 @@ prontera,173,160,6	script	ไก	899,{
 		end;
 	}
 	.@price = (250 * (1 + gymPassMemory));
-	setarray .@questItemId[0],953,7004,7096,7189,7067,6693;
+	setarray .@questItemId[0],THE_BOX_ITEM_ID,WEAPON_KEY_ITEM_ID,EQUIPMENT_KEY_ITEM_ID,COSTUME_KEY_ITEM_ID,CARD_KEY_ITEM_ID,ENCHANTMENT_KEY_ITEM_ID;
 	setarray .@questPoints[0],1,2,2,2,3,3;
 	mes "ระบบจะแลกของที่เพิ่มแต้มน้อยที่สุดก่อน";
 	for(.@i = 0; .@i < getarraysize(.@questItemId); .@i++){

@@ -24,7 +24,7 @@ TestDamage:
 	next;
 	input bonusDebuff;
 	ApplyTired();
-	.@index = (select(" ~ ปกติ: ~ Rank 0: ~ Rank 10: ~ Rank 100: ~ Rank 1000") - 1);
+	.@index = (select(" ~ ปกติ: ~ Rank 0: ~ Rank 3: ~ Rank 66: ~ Rank 99") - 1);
 	setarray .@mapName$[0],"tra_fild","06guild_01","06guild_02","06guild_03","06guild_04";
 	warp .@mapName$[.@index],0,0;
 	end;

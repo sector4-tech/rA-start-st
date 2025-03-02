@@ -63,14 +63,14 @@ Body:
         Item: Oridecon   
         RequiredItems:
           - Index: 0
-            Item: Oridecon_Stone
-            Amount: 5
+            Item: THE_BOX
+            Amount: 50
       - Index: 3
         Item: Elunium   
         RequiredItems:
           - Index: 0
-            Item: Elunium_Stone
-            Amount: 5
+            Item: THE_BOX
+            Amount: 50
   - Name: ·≈° Rise Stone
     Map: prontera
     X: 153

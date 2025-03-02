@@ -18,7 +18,7 @@ OnFetch:
 		setarray .@tempPlayerCIDs[getarraysize(.@tempPlayerCIDs)],.@playerCIDs[.@i];
 	}
 	for(.@i = 0; .@i < getarraysize(.@tempPlayerCIDs); .@i++)
-	.@menu$ += replacestr(strcharinfo(0,.@tempPlayerCIDs[.@i]),":","",0) + " (^1c9311" + strcharinfo(3,.@tempPlayerCIDs[.@i]) + "^000000):";
+	.@menu$ += replacestr(strcharinfo(0,.@tempPlayerCIDs[.@i]),":","",0) + " (^1c9311" + strcharinfo(3,.@tempPlayerCIDs[.@i]) + " ห้อง " + (getvar(lastPlayMap,.@tempPlayerCIDs[.@i]) + 1) + "^000000):";
 	.@index = (select(.@menu$) - 1);
 	followCID = .@tempPlayerCIDs[.@index];
 	if(followCID == getcharid(0)){
