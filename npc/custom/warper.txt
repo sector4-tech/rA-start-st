@@ -30,6 +30,11 @@ TestDamage:
 	end;
 	
 Pvp:
+	clear;
+	mes "ระบุ % ของเสื่อม";
+	next;
+	input bonusDebuff;
+	ApplyTired();
 	warp "pvp_n_1-3",0,0;
 	end;
 
