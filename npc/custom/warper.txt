@@ -31,9 +31,9 @@ TestDamage:
 	
 Pvp:
 	clear;
-	mes "ระบุ % ของเสื่อม";
+	mes "ระบุ % ล้า";
 	next;
-	input bonusDebuff;
+	input tired;
 	ApplyTired();
 	warp "pvp_n_1-3",0,0;
 	end;
