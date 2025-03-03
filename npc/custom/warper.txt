@@ -95,23 +95,25 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		,getmonsterinfo(.@monsterIds[2],MOB_BASEEXP)
 		,getmonsterinfo(.@monsterIds[3],MOB_BASEEXP)
 		;
+		
 		// Tell player here
 		.@bossHint$ = ((getd("$tbrBossRate" + .@i) > 0) ? ("^000000\n• ^d32323" + getmonsterinfo(getd("$tbrBMID" + .@i),MOB_NAME) + "^000000 (" + getd("$tbrBMID" + .@i) + ") (^ff0000Rank " + (.@difficulty * $bossRankMultiplier) + "^000000)\n-> โอกาสเกิด " + StringBase10000(getd("$tbrBossRate" + .@i)) + "%\n-> ^b600ff" + .@rhpItemName$ + " " +  StringBase10000(.@difficulty * $rhpMultiplier) + "%^000000") : "");
 		mes "^1c9311---------- ห้อง " + (.@i + 1) + " ----------^000000"
-		+ "^000000\n• " + .@monsterNames$[0] + "(" + .@monsterIds[0] + ")\n[^818181Lv. " + .@monsterLevels[0] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[0] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[0]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[0]")) + "%^000000]"
-		+ "^000000\n• " + .@monsterNames$[1] + "(" + .@monsterIds[1] + ")\n[^818181Lv. " + .@monsterLevels[1] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[1] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[1]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[1]")) + "%^000000]"
-		+ "^000000\n• " + .@monsterNames$[2] + "(" + .@monsterIds[2] + ")\n[^818181Lv. " + .@monsterLevels[2] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[2] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[2]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[2]")) + "%^000000]"
-		+ "^000000\n• " + .@monsterNames$[3] + "(" + .@monsterIds[3] + ")\n[^818181Lv. " + .@monsterLevels[3] + "^000000, ^00aaffEXP " + KM(.@monsterEXPs[3] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[3]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[3]")) + "%^000000]"
+		+ "^000000\n• " + .@monsterNames$[0] + " (" + .@monsterIds[0] + ") ^818181Lv. " + .@monsterLevels[0] + "^000000\n[^00aaffEXP " + KM(.@monsterEXPs[0] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[0]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[0]")) + "%^000000, ^7a40e6" + ($zenyTiers[.@difficulty - 1] * getd("$tbrZenyMultiplier" + .@i + "[0]")) +"z^000000]"
+		+ "^000000\n• " + .@monsterNames$[1] + " (" + .@monsterIds[1] + ") ^818181Lv. " + .@monsterLevels[1] + "^000000\n[^00aaffEXP " + KM(.@monsterEXPs[1] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[1]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[1]")) + "%^000000, ^7a40e6" + ($zenyTiers[.@difficulty - 1] * getd("$tbrZenyMultiplier" + .@i + "[1]")) +"z^000000]"
+		+ "^000000\n• " + .@monsterNames$[2] + " (" + .@monsterIds[2] + ") ^818181Lv. " + .@monsterLevels[2] + "^000000\n[^00aaffEXP " + KM(.@monsterEXPs[2] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[2]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[2]")) + "%^000000, ^7a40e6" + ($zenyTiers[.@difficulty - 1] * getd("$tbrZenyMultiplier" + .@i + "[2]")) +"z^000000]"
+		+ "^000000\n• " + .@monsterNames$[3] + " (" + .@monsterIds[3] + ") ^818181Lv. " + .@monsterLevels[3] + "^000000\n[^00aaffEXP " + KM(.@monsterEXPs[3] + ($expTiers[.@difficulty - 1] * getd("$tbrExpMultiplier" + .@i + "[3]"))) + "^000000, ^bb85ff" + .@tbItemName$ + " " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * getd("$tbrDropMultiplier" + .@i + "[3]")) + "%^000000, ^7a40e6" + ($zenyTiers[.@difficulty - 1] * getd("$tbrZenyMultiplier" + .@i + "[3]")) +"z^000000]"
 		+ .@bossHint$
 		;
 		
 		.@averageExp = ((.@monsterEXPs[0] + .@monsterEXPs[1] + .@monsterEXPs[2] + .@monsterEXPs[3])  / 4);
 		.@averageExpMultiplier = ((getd("$tbrExpMultiplier" + .@i + "[0]") + getd("$tbrExpMultiplier" + .@i + "[1]") + getd("$tbrExpMultiplier" + .@i + "[2]") + getd("$tbrExpMultiplier" + .@i + "[3]")) / 4);
+		.@averageZenyMultiplier = ((getd("$tbrZenyMultiplier" + .@i + "[0]") + getd("$tbrZenyMultiplier" + .@i + "[1]") + getd("$tbrZenyMultiplier" + .@i + "[2]") + getd("$tbrZenyMultiplier" + .@i + "[3]")) / 4);
 		.@averageDrop = ((getd("$tbrDropMultiplier" + .@i + "[0]") + getd("$tbrDropMultiplier" + .@i + "[1]") + getd("$tbrDropMultiplier" + .@i + "[2]") + getd("$tbrDropMultiplier" + .@i + "[3]")) / 4);
 		.@averageLv = ((.@monsterLevels[0] + .@monsterLevels[1] + .@monsterLevels[2] + .@monsterLevels[3])  / 4);
 		
 		// Menu creator
-		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ความยาก " + .@difficulty + ") [เฉลี่ย Monster Lv. ^818181" + .@averageLv + "^000000, EXP เฉลี่ย ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000, ^bb85ff" + .@tbItemName$ + " เฉลี่ย " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * .@averageDrop) + "%^000000] - " + $maps$[$playingMaps[.@i]] + ":";
+		.@tbrMenu$ += "ห้อง " + (.@i + 1) + " (ยาก " + .@difficulty + ") [เฉลี่ย Lv. ^818181" + .@averageLv + "^000000, EXP ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000, ^bb85ffTB " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * .@averageDrop) + "%^000000, ^7a40e6" + ($zenyTiers[.@difficulty - 1] * .@averageZenyMultiplier) + "z^000000] " + $maps$[$playingMaps[.@i]] + ":";
 	}
 	// Select room 1~5 from each tier
 	.@index = (select(.@tbrMenu$) - 1);
@@ -220,6 +222,9 @@ OnTryToSpawnBoss:
 OnGetReward:
 	.@monsterIndex = getarg(0,0);
 	.@isBoss = getarg(1,0);
+	
+	// Reward Zeny
+	ChangeZeny($zenyTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrZenyMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]")),0);
 	
 	// Reward EXP
 	.@rewardExp = $expTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"));

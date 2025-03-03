@@ -92,6 +92,7 @@ function	script	ChangeZeny	{
 	.@isEffect = getarg(1,1);
 	.@isIncrease = (.@value >= 0);
 	Zeny = Cap(Zeny,.@value);
+	if(#IS_ZENY_INFO)
 	message strcharinfo(0),(.@isIncrease ? "+" : "-") + F_InsertComma(.@value) + "z เป็น " + F_InsertComma(Zeny) + "z";
 	if(.@isEffect)
 	specialeffect2 18;

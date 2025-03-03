@@ -98,6 +98,30 @@ OnSetupMonsterId:
 		: 1								// 100%	Drop x1
 		;
 		
+		// Setup Zeny multiplier
+		setarray getd("$tbrZenyMultiplier" + .@i + "[0]")
+		,(rand(100) < 5) ? 5		// 5%		Zeny x5
+		: (rand(100) < 10) ? 4	// 10%		Zeny x4
+		: (rand(100) < 20) ? 3	// 20%		Zeny x3
+		: (rand(100) < 40) ? 2	// 40%		Zeny x2
+		: 1								// 100%	Zeny x1
+		,(rand(100) < 5) ? 5		// 5%		Zeny x5
+		: (rand(100) < 10) ? 4	// 10%		Zeny x4
+		: (rand(100) < 20) ? 3	// 20%		Zeny x3
+		: (rand(100) < 40) ? 2	// 40%		Zeny x2
+		: 1								// 100%	Zeny x1
+		,(rand(100) < 5) ? 5		// 5%		Zeny x5
+		: (rand(100) < 10) ? 4	// 10%		Zeny x4
+		: (rand(100) < 20) ? 3	// 20%		Zeny x3
+		: (rand(100) < 40) ? 2	// 40%		Zeny x2
+		: 1								// 100%	Zeny x1
+		,(rand(100) < 5) ? 5		// 5%		Zeny x5
+		: (rand(100) < 10) ? 4	// 10%		Zeny x4
+		: (rand(100) < 20) ? 3	// 20%		Zeny x3
+		: (rand(100) < 40) ? 2	// 40%		Zeny x2
+		: 1								// 100%	Zeny x1
+		;
+		
 		// Setup boss
 		set getd("$tbrBMID" + .@i),$mvpIds[rand(getarraysize($mvpIds))];
 		// Setup boss spawn rate (Only for room 31+)
