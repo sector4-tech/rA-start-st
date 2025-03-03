@@ -1,6 +1,6 @@
 -	script	Tutorial	-1,{
 	message strcharinfo(0),
-	(strnpcinfo(2) == "1") ? "ทุก ๆ 10 นาที Map, Monster, x EXP, x DROP จะเปลี่ยน"
+	(strnpcinfo(2) == "1") ? "ทุก ๆ 10 นาที Map, Monster, x EXP, x DROP, x Zeny จะเปลี่ยน"
 	: "กระดานนี้ไม่ได้เขียนอะไรไว้"
 	;
 	end;
