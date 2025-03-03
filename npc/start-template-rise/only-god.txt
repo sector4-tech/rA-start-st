@@ -17,7 +17,7 @@ prontera,159,214,8	script	�Ѵ෾	10371,{
 		close;
 	}
 	.@debuff = 90;
-	.@price = 7000000;
+	.@price = 700000;
 	.@baseMonsterRank = 66;
 	
 	monsterRank = .@baseMonsterRank;
