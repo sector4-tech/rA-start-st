@@ -111,7 +111,7 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		.@averageLv = ((.@monsterLevels[0] + .@monsterLevels[1] + .@monsterLevels[2] + .@monsterLevels[3])  / 4);
 		
 		// Menu creator
-		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ความยาก " + .@difficulty + ") [เฉลี่ย Monster Lv. ^818181" + .@averageLv + "^000000, EXP เฉลี่ย ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000, ^bb85ff" + .@tbItemName$ + " เฉลี่ย " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * .@averageDrop) + "%^000000]:";
+		.@tbrMenu$ += " ~ เข้าห้องที่ " + (.@i + 1) + " (ความยาก " + .@difficulty + ") [เฉลี่ย Monster Lv. ^818181" + .@averageLv + "^000000, EXP เฉลี่ย ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000, ^bb85ff" + .@tbItemName$ + " เฉลี่ย " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * .@averageDrop) + "%^000000] - " + $maps$[$playingMaps[.@i]] + ":";
 	}
 	// Select room 1~5 from each tier
 	.@index = (select(.@tbrMenu$) - 1);
