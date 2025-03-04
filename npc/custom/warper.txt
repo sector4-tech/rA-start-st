@@ -257,7 +257,8 @@ OnGetReward:
 	if ((@comboDelay < .@timeTick) || .@isBoss){
 		combo++;
 		@comboDelay = .@timeTick + 1;
-		//dispbottom "Combo " + combo;
+		if(#IS_COMBO_INFO)
+		dispbottom "Combo " + combo;
 	}
 	
 	return;

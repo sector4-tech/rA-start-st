@@ -84,8 +84,12 @@ OnLoad:
 	end;
 	
 OnPCDieEvent:
-	if(!IsCustomMap(strcharinfo(3)))
-	announce combo + " Combo สูญหายไปแล้วเนื่องจากหมดสติ",bc_self,0xd598f0,0,23;
+	if(!IsCustomMap(strcharinfo(3))){
+		bonus_script_clear;
+		announce combo + " Combo สูญหายไปแล้วเนื่องจากหมดสติ",bc_self,0xd598f0,0,23;
+		combo = 0;
+	}
+
 	
 	end;
 }

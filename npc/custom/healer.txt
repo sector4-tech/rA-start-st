@@ -5,6 +5,7 @@
 	menu
 	"ฟื้นฟู HP & SP เต็ม",-
 	,"ฟื้นฟู HP & SP เต็ม & รับ Buff & Reset Cooldown [^af1ada" + getitemname(.@fullBuffCostItemId) + " " + F_InsertComma(.@fullBuffCost) + " ชิ้น^000000] (สุ่มราคาใหม่หลังซื้อ)",L_FullBuff
+	,"รับ All Status ชั่วคราว จาก Combo",L_Combo
 	,"ซ่อมอุปกรณ์ทั้งตัว [^af1ada" + F_InsertComma(.@repairAllPrice) + "z^000000]",L_RepairAll
 	;
 	.@Delay = 3;
@@ -43,6 +44,25 @@
 	specialeffect2 77;
 	fullBuffCostMultiplier = rand(1,IsWeekend() ? 5 : 10);
 	end;
+	
+	L_Combo:
+	mes "คุณมี " + combo + " Combo";
+	mes "*รับแล้ว Combo จะเหลือเท่าเดิม ไม่ลด";
+	next;
+	.@comboIndex = select(
+	"All status +1 ใช้ 10 Combo:"
+	+ "All status +10 ใช้ 100 Combo:"
+	+ "All status +100 ใช้ 1,000 Combo:"
+	+ "All status +1,000 ใช้ 10,000 Combo:"
+	+ "All status +10,000 ใช้ 100,000 Combo:"
+	);
+	if(combo < pow(10,.@comboIndex)){
+		mes "Combo ไม่เพียงพอ";
+		close;
+	}
+	bonus_script_clear;
+	bonus_script "bonus bAllStats," + pow((.@comboIndex == 1) ? 1 : 10,.@comboIndex - 1) + ";",86400,1,1;
+	close;
 	
 	L_RepairAll:
 	if(Zeny < .@repairAllPrice){
