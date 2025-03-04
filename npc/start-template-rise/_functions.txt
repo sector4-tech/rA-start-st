@@ -229,6 +229,7 @@ function	script	RandomOption	{
 		close;
 	}
 
+OnRedo:
 	if(.@isNormal){
 		if(Zeny < .@normalPrice){
 			mes "Zeny ไม่เพียงพอ";
@@ -243,6 +244,9 @@ function	script	RandomOption	{
 		}
 		
 		ChangeZeny(-.@normalPrice);
+		
+		next;
+		menu "รับทราบ",-,"รับทราบ",-,"รับทราบ",-,"ทำใหม่อีกรอบ",OnRedo;
 	}
 	else{
 		if(Zeny < .@selectedIndexPrice){
@@ -276,6 +280,9 @@ function	script	RandomOption	{
 		ChangeZeny(-.@selectedIndexPrice * (.@saveLoopCount - .@loopCount));
 		else
 		ChangeZeny(-.@selectedIndexPrice);
+		
+		next;
+		menu "รับทราบ",-,"รับทราบ",-,"รับทราบ",-,"ทำใหม่อีกรอบ",OnRedo;
 	}
 	close;
 }
