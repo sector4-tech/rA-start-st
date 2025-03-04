@@ -616,17 +616,9 @@ function	script	GetAvailableMap	{
 				break;
 			}
 		}
-		// Loop all level and check map available
-		for(.@i = 0; .@i < getarraysize($playingBossMaps); .@i++){
-			// Error because found same map index
-			if((.@mapIndex == $playingBossMaps[.@i]) || IsCustomMap($maps$[.@mapIndex])){
-				.@isContinue = 1;
-				break;
-			}
-		}
 		// Good! Found available map now
 		if(!.@isContinue)
-		.@isFoundSameMap = 0;
+		break;
 	}
 	// Error..
 	if(.@retry <= 0){
