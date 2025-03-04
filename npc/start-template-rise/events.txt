@@ -82,6 +82,12 @@ OnLoad:
 	}
 	warp "Save",0,0;
 	end;
+	
+OnPCDieEvent:
+	if(!IsCustomMap(strcharinfo(3)))
+	announce combo + " Combo สูญหายไปแล้วเนื่องจากหมดสติ",bc_self,0xd598f0,0,23;
+	
+	end;
 }
 
 prontera	mapflag	loadevent

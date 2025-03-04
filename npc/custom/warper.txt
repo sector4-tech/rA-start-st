@@ -176,6 +176,7 @@ OnSpawnMore:
 	.@amount = getarg(1,0);
 	.@isNonBoss = getarg(2,1);
 	.@isBoss = getarg(3,0);
+	
 	if(.@isNonBoss){
 		freeloop(1);
 		for(.@i = 0; .@i < .@amount; .@i++){
@@ -191,7 +192,7 @@ OnSpawnMore:
 		$isBossAlive[.@room] = 1;
 		announce getmonsterinfo(getd("$tbrBMID" + lastPlayMap),MOB_NAME) + " เกิดแล้ว!",bc_map;
 	}
-
+	
 	return;
 
 OnMonsterDeadIndex0: if(!playerattached()) end; callsub OnGetReward,0; callsub OnSpawnMore,lastPlayMap,1,1,0; callsub OnTryToSpawnBoss; end;
@@ -239,17 +240,26 @@ OnGetReward:
 		dispbottom "ต้องสุ่มได้ < " + (tier * $rhpMultiplier) + " เพื่อรับ " + getitemname(REFINE_HACK_POWDER_ITEM_ID) + " คุณสุ่มได้ " + .@rhpRand;
 	}
 	
+	.@timeTick = gettimetick(2);
 	// Reward THE BOX
-	if ((@tbDropDelay < gettimetick(2)) || .@isBoss){
+	if ((@tbDropDelay < .@timeTick) || .@isBoss){
 		.@tbDropChance = $tbDropRateTiers[tier - 1] * getd("$tbrDropMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]");
 		.@tbRand = rand(10000);
 		if((.@tbRand < .@tbDropChance) || .@isBoss){
-			@tbDropDelay = gettimetick(2) + 1;
+			@tbDropDelay = .@timeTick + 1;
 			getitem THE_BOX_ITEM_ID,.@isBoss ? rand(1,max(2,getd("$tbrBossRate" + lastPlayMap))) : 1;
 		}
 		else
 		dispbottom "ต้องสุ่มได้ < " + .@tbDropChance + " เพื่อรับ " + getitemname(THE_BOX_ITEM_ID) + " คุณสุ่มได้ " + .@tbRand;
 	}
+	
+	// Combo
+	if ((@comboDelay < .@timeTick) || .@isBoss){
+		combo++;
+		@comboDelay = .@timeTick + 1;
+		//dispbottom "Combo " + combo;
+	}
+	
 	return;
 	
 OnInit:
