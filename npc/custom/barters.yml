@@ -63,9 +63,21 @@ Body:
         Item: Oridecon   
         RequiredItems:
           - Index: 0
+            Item: Oridecon_Stone
+            Amount: 5
+      - Index: 3
+        Item: Elunium   
+        RequiredItems:
+          - Index: 0
+            Item: Elunium_Stone
+            Amount: 5
+      - Index: 4
+        Item: Oridecon   
+        RequiredItems:
+          - Index: 0
             Item: THE_BOX
             Amount: 50
-      - Index: 3
+      - Index: 5
         Item: Elunium   
         RequiredItems:
           - Index: 0
