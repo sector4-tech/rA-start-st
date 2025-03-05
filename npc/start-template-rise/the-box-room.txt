@@ -134,6 +134,9 @@ OnSetupMonsterId:
 		$playingMaps[.@i] = callfunc("GetAvailableMap");
 	}
 	
+	// Cursed room
+	$isCursedRoomEven = rand(0,1);
+	
 	freeloop(0);
 	
 	// Mark as initialized

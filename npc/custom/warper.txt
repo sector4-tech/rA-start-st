@@ -113,7 +113,7 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 		.@averageLv = ((.@monsterLevels[0] + .@monsterLevels[1] + .@monsterLevels[2] + .@monsterLevels[3])  / 4);
 		
 		// Menu creator
-		.@tbrMenu$ += "ห้อง " + (.@i + 1) + " (ยาก " + .@difficulty + ") [เฉลี่ย Lv. ^818181" + .@averageLv + "^000000, EXP ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000, ^bb85ffTB " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * .@averageDrop) + "%^000000, ^7a40e6" + ($zenyTiers[.@difficulty - 1] * .@averageZenyMultiplier) + "z^000000] " + $maps$[$playingMaps[.@i]] + ":";
+		.@tbrMenu$ += "ห้อง " + (.@i + 1) + " (ยาก " + .@difficulty + ") [เฉลี่ย Lv. " + .@averageLv + ", EXP ^00aaff" + KM(.@averageExp + ($expTiers[.@difficulty - 1] * .@averageExpMultiplier)) + "^000000, ^bb85ffTB " + StringBase10000($tbDropRateTiers[.@difficulty - 1] * .@averageDrop) + "%^000000, " + ($zenyTiers[.@difficulty - 1] * .@averageZenyMultiplier) + "z] " + $maps$[$playingMaps[.@i]] + " " + ((((.@i + 1) % 2) == ($isCursedRoomEven ? 0 : 1)) ? "^ff0000(คำสาป)^000000" : "") + ":";
 	}
 	// Select room 1~5 from each tier
 	.@index = (select(.@tbrMenu$) - 1);
@@ -121,6 +121,8 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	.@room = (.@index) + (5 * (.@difficulty - 1));
 	// Remember last play map index
 	lastPlayMap = .@room;
+	// Remember cursed room
+	isCursed = (((lastPlayMap + 1) % 2) == ($isCursedRoomEven ? 0 : 1)) ? 1 : 0;
 	// Remember last play map name
 	lastPlayMap$ = $maps$[$playingMaps[.@room]];
 	// Remember last play map tier
@@ -221,14 +223,56 @@ OnTryToSpawnBoss:
 	return;
 
 OnGetReward:
+	.@timeTick = gettimetick(2);
+
+	// Cursed Room (Delay 1s too)
+	if(isCursed && ((@cursedDropDelay < .@timeTick) || .@isBoss)){
+		@cursedDropDelay = .@timeTick + 1;
+		.@randCursed = rand(100);
+		
+		if(.@randCursed < 1) // 1% THE BOX KEY
+		{
+			getitem THE_BOX_ITEM_ID,1;
+			message strcharinfo(0),"ร่ำรวย THE BOX!!";
+		}
+		else if(.@randCursed < 2) // 1% 100k Zeny
+		{
+			ChangeZeny(100000,0);
+			message strcharinfo(0),"ร่ำรวยเงินทอง!!";
+		}
+		else if(.@randCursed < 30) // 28% +1 Multiplier
+		{
+			.@cursedMultiplier = 1;
+			message strcharinfo(0),"คูณรางวัล!!";
+		}
+		else if(.@randCursed < 35) // 5% Max move speed (5s)
+		{
+			bonus_script "bonus bSpeedAddRate,1000;",5,1,1;
+			message strcharinfo(0),"ก้าวพริบตา!!";
+		}
+		else if(.@randCursed < 40) // 5% Max attack speed (5s)
+		{
+			bonus_script "bonus bAspd,199;",5,1,1;
+			message strcharinfo(0),"สับแหลก!!";
+		}
+		else if(.@randCursed < 90) // Other than that random debuff (3s)
+		{
+			setarray .@debuffs[0],SC_STONE,SC_FREEZE,SC_STUN,SC_SLEEP,SC_POISON,SC_CURSE,SC_SILENCE,SC_CONFUSION,SC_BLIND,SC_BLEEDING,SC_PROVOKE,SC_DECREASEAGI;
+			setarray .@debuffDurations[0],3000,3000,3000,3000,30000,30000,30000,3000,30000,30000,30000,30000;
+			.@randDebuff = rand(getarraysize(.@debuffs));
+			sc_start .@debuffs[.@randDebuff],.@debuffDurations[.@randDebuff],10;
+		}
+		// 10% Nothing
+	}
+	
 	.@monsterIndex = getarg(0,0);
 	.@isBoss = getarg(1,0);
 	
 	// Reward Zeny
-	ChangeZeny($zenyTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrZenyMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]")),0);
+	ChangeZeny($zenyTiers[tier - 1] * (.@cursedMultiplier + (.@isBoss ? 10 : getd("$tbrZenyMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"))),0);
 	
 	// Reward EXP
-	.@rewardExp = $expTiers[tier - 1] * (.@isBoss ? 10 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"));
+	.@rewardExp = $expTiers[tier - 1] * (.@cursedMultiplier + (.@isBoss ? 10 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]")));
 	getexp .@rewardExp,.@rewardExp / 2;
 	
 	// Reward Refine Hack Powder ( Difficult / 4 ) %
@@ -240,10 +284,9 @@ OnGetReward:
 		dispbottom "ต้องสุ่มได้ < " + (tier * $rhpMultiplier) + " เพื่อรับ " + getitemname(REFINE_HACK_POWDER_ITEM_ID) + " คุณสุ่มได้ " + .@rhpRand;
 	}
 	
-	.@timeTick = gettimetick(2);
 	// Reward THE BOX
 	if ((@tbDropDelay < .@timeTick) || .@isBoss){
-		.@tbDropChance = $tbDropRateTiers[tier - 1] * getd("$tbrDropMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]");
+		.@tbDropChance = $tbDropRateTiers[tier - 1] * (.@cursedMultiplier + getd("$tbrDropMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"));
 		.@tbRand = rand(10000);
 		if((.@tbRand < .@tbDropChance) || .@isBoss){
 			@tbDropDelay = .@timeTick + 1;
