@@ -260,7 +260,7 @@ OnGetReward:
 			setarray .@debuffs[0],SC_STONE,SC_FREEZE,SC_STUN,SC_SLEEP,SC_POISON,SC_CURSE,SC_SILENCE,SC_CONFUSION,SC_BLIND,SC_BLEEDING,SC_PROVOKE,SC_DECREASEAGI;
 			setarray .@debuffDurations[0],1000,1000,1000,1000,30000,30000,30000,3000,30000,30000,30000,30000;
 			.@randDebuff = rand(getarraysize(.@debuffs));
-			sc_start .@debuffs[.@randDebuff],.@debuffDurations[.@randDebuff],10;
+			sc_start .@debuffs[.@randDebuff],.@debuffDurations[.@randDebuff] / 2,10;
 		}
 		// Other than that nothing
 	}
