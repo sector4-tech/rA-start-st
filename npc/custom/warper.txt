@@ -255,14 +255,14 @@ OnGetReward:
 			bonus_script "bonus bAspd,199;",5,1,1;
 			message strcharinfo(0),"สับแหลก!!";
 		}
-		else if(.@randCursed < 90) // Other than that random debuff (3s)
+		else if(.@randCursed < 65) // 25% Random debuff (3s)
 		{
 			setarray .@debuffs[0],SC_STONE,SC_FREEZE,SC_STUN,SC_SLEEP,SC_POISON,SC_CURSE,SC_SILENCE,SC_CONFUSION,SC_BLIND,SC_BLEEDING,SC_PROVOKE,SC_DECREASEAGI;
-			setarray .@debuffDurations[0],1000,1000,1000,1000,30000,30000,30000,30000,30000,30000,30000,30000;
+			setarray .@debuffDurations[0],1000,1000,1000,1000,30000,30000,30000,3000,30000,30000,30000,30000;
 			.@randDebuff = rand(getarraysize(.@debuffs));
 			sc_start .@debuffs[.@randDebuff],.@debuffDurations[.@randDebuff],10;
 		}
-		// 10% Nothing
+		// Other than that nothing
 	}
 	
 	.@monsterIndex = getarg(0,0);
