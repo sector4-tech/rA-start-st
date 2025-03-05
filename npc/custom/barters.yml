@@ -76,13 +76,25 @@ Body:
         RequiredItems:
           - Index: 0
             Item: THE_BOX
-            Amount: 50
+            Amount: 3
       - Index: 5
         Item: Elunium   
         RequiredItems:
           - Index: 0
             Item: THE_BOX
-            Amount: 50
+            Amount: 3
+      - Index: 6
+        Item: Bradium   
+        RequiredItems:
+          - Index: 0
+            Item: THE_BOX
+            Amount: 5
+      - Index: 7
+        Item: Carnium   
+        RequiredItems:
+          - Index: 0
+            Item: THE_BOX
+            Amount: 5
   - Name: ·≈° Rise Stone
     Map: prontera
     X: 153
