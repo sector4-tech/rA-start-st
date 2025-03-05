@@ -89,7 +89,6 @@ OnPCDieEvent:
 		announce combo + " Combo สูญหายไปแล้วเนื่องจากหมดสติ",bc_self,0xd598f0,0,23;
 		combo = 0;
 	}
-
 	
 	end;
 }

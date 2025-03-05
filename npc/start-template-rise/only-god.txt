@@ -50,9 +50,7 @@ prontera,159,214,8	script	�Ѵ෾	10371,{
 	close;
 	
 	L_DebuffApply:
-	ptt = 0;
 	tired = cap_value(90,0,100);
-	tiredSpot = rand(1,16);
 	ApplyTired();
 	@isOnlyGodEnter = 1;
 	return;
@@ -72,8 +70,14 @@ x_prt	mapflag	nobranch
 x_prt	mapflag	notomb
 x_prt	mapflag	nopetcapture
 
-x_prt,70,70,4	script	Ruwach#�Ѵ෾	10371,{
+x_prt,70,70,4	script	Ruwach#�Ѵ෾	10371,500,500,{
 	npcskill "AL_RUWACH",1,0,1;
+	end;
+	
+OnTouch:
+	tired = cap_value(90,0,100);
+	ApplyTired();
+	@isOnlyGodEnter = 1;
 	end;
 }
 
