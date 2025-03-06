@@ -136,9 +136,6 @@ OnSetupMonsterId:
 	
 	// Cursed room
 	$isCursedRoomEven = rand(0,1);
-	
-	for(.@i = 0; .@i < 20; .@i++)
-	donpcevent "ห้อง#" + (.@i + 1) + "::OnRefreshInfo";
 
 	freeloop(0);
 	

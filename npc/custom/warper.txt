@@ -310,35 +310,6 @@ OnGetReward:
 	
 	return;
 	
-OnRefreshInfo:
-	.@difficulty = strnpcinfo(2);
-	
-	.@index = 0 + (5 * (.@difficulty - 1));
-	
-	for(.@i = .@index; .@i < (.@index + 5); .@i++){
-		// Information - Monster ID
-		setarray .@monsterIds[0]
-		,getd("$tbrMID" + .@i + "[0]")
-		,getd("$tbrMID" + .@i + "[1]")
-		,getd("$tbrMID" + .@i + "[2]")
-		,getd("$tbrMID" + .@i + "[3]")
-		;
-		
-		// Information - Monster EXP
-		setarray .@monsterEXPs[0]
-		,getmonsterinfo(.@monsterIds[0],MOB_BASEEXP)
-		,getmonsterinfo(.@monsterIds[1],MOB_BASEEXP)
-		,getmonsterinfo(.@monsterIds[2],MOB_BASEEXP)
-		,getmonsterinfo(.@monsterIds[3],MOB_BASEEXP)
-		;
-		
-		.@averageExp += ((.@monsterEXPs[0] + .@monsterEXPs[1] + .@monsterEXPs[2] + .@monsterEXPs[3])  / 4);
-		.@averageExpMultiplier += ((getd("$tbrExpMultiplier" + .@i + "[0]") + getd("$tbrExpMultiplier" + .@i + "[1]") + getd("$tbrExpMultiplier" + .@i + "[2]") + getd("$tbrExpMultiplier" + .@i + "[3]")) / 4);
-	}
-	delwaitingroom;
-	waitingroom strnpcinfo(0) + " | EXP:" + KM(.@averageExp),0;
-	end;
-	
 OnInit:
 	$rhpMultiplier = 200;
 	$bossRankMultiplier = 2;
