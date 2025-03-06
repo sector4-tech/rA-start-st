@@ -251,12 +251,12 @@ OnGetReward:
 		}
 		else if(.@randCursed < 35) // 5% Max move speed (5s)
 		{
-			bonus_script "bonus bSpeedAddRate,1000;",5,1,1;
+			bonus_script "bonus bSpeedAddRate,1000;",10,1,1;
 			message strcharinfo(0),"ก้าวพริบตา!!";
 		}
 		else if(.@randCursed < 40) // 5% Max attack speed (5s)
 		{
-			bonus_script "bonus bAspd,199;",5,1,1;
+			bonus_script "bonus bAspd,199;",10,1,1;
 			message strcharinfo(0),"สับแหลก!!";
 		}
 		else if(.@randCursed < 65) // 25% Random debuff (3s)
