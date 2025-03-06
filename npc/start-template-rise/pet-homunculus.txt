@@ -1,6 +1,6 @@
 prontera,134,172,4	script	ลักซี่	10463,{
 	//menu "ฟัก Poring",-,"เปลี่ยนความสนิทสนม",L_Love,"เปลี่ยนความหิว",L_Food,"เปลี่ยนความสนิทสนม Homunculus",L_HomunLove,"เปลี่ยนความหิว Homunculus",L_HomunFood,"เปลี่ยน Level Homunculus",L_HomunLv,"Evolution Homunculus",L_HomunEvo,"Mutation Homunculus",L_HomunMutation;
-	menu "ฟักไข่",L_Birth,"สู้เพื่อ Food Points",L_FightForFoodPoints,"แลก 100 Food Points ให้ Pet & Homunculus อิ่ม สนิท",L_FoodPointsTrade,"Evolution Homunculus",L_HomunEvo,"Mutation Homunculus",L_HomunMutation;
+	menu "ฟักไข่",L_Birth,"สู้เพื่อ Food Points",L_FightForFoodPoints,"แลก 20 Food Points ให้ Pet & Homunculus อิ่ม สนิท",L_FoodPointsTrade,"Evolution Homunculus",L_HomunEvo,"Mutation Homunculus",L_HomunMutation;
 	makepet 1002;
 	sleep2 1;
 	L_Birth:
@@ -34,8 +34,8 @@ OnMonsterDead:
 	end;
 	
 	L_FoodPointsTrade:
-	if(fp >= 100){
-		fp -= 100;
+	if(fp >= 20){
+		fp -= 20;
 		atcommand "@petfriendly 1000";
 		atcommand "@pethungry 100";
 		atcommand "@homfriendly 1000";
