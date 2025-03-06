@@ -36,6 +36,8 @@ prontera,138,184,8	script	à¿Ãà«ÕÂ	10468,{
 	function	Can_Change_Fourth	{
 		if(!.FourthClass)
 		return false;
+		if((Class == 4239) || (Class == 4240))
+		return true;
 		if((eaclass() & (EAJL_THIRD | EAJL_UPPER)) != (EAJL_THIRD | EAJL_UPPER))
 		return false;
 		if(eaclass() & EAJL_FOURTH)
@@ -109,7 +111,6 @@ prontera,138,184,8	script	à¿Ãà«ÕÂ	10468,{
 	.@rebirth_possible = Can_Rebirth();
 	.@first_eac = (.@eac & EAJ_BASEMASK);
 	.@second_eac = (.@eac & EAJ_UPPERMASK);
-	
 	if(.@rebirth_possible){
 		Require_Level(.Req_Rebirth[0],.Req_Rebirth[1]);
 		Job_Options(.@job_opt,Job_Novice_High);
@@ -120,6 +121,11 @@ prontera,138,184,8	script	à¿Ãà«ÕÂ	10468,{
 	}
 	if(.@fourth_possible){
 		Require_Level(.Req_Fourth[0],.Req_Fourth[1]);
+		if(Class == 4239)
+		Job_Options(.@job_opt,4302);
+		else if(Class == 4240)
+		Job_Options(.@job_opt,4303);
+		else
 		Job_Options(.@job_opt,roclass(.@eac | EAJL_FOURTH));
 	}
 	

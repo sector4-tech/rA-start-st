@@ -1,0 +1,7 @@
+prontera,140,182,7	script	√—∫ Skill Point ·¡« C2	857,{
+	if((Class == 4308) && !isSHHotfix){
+		isSHHotfix = 1;
+		atcommand "@skpoint 59";
+	}
+	end;
+}
