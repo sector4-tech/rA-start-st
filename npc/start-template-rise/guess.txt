@@ -1,4 +1,4 @@
-prontera,176,187,3	script	ตั๋วเดา	563,{
+prontera,176,187,3	script	THE BOX เดา	563,{
 	if(!guessMin)
 	guessMin = 1;
 	if(!guessMax)
@@ -50,7 +50,7 @@ OnInit:
 	.reward = 100;
 	.priceItemId = THE_BOX_ITEM_ID;
 	.rewardItemId = THE_BOX_ITEM_ID;
-	waitingroom "ตั๋วเดา",0;
+	waitingroom "THE BOX เดา",0;
 	end;
 }
 

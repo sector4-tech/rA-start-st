@@ -1,4 +1,4 @@
-prontera,147,171,6	script	THE BOX	10308,{
+prontera,147,171,6	script	THE BOX	10033,{
 	mes "ในการสุ่ม";
 	mes "Weapon ใช้ " + mesitemlink(WEAPON_KEY_ITEM_ID);
 	mes "Armor ใช้ " + mesitemlink(EQUIPMENT_KEY_ITEM_ID);

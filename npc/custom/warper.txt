@@ -8,6 +8,7 @@
 
 	menu
 	" ~ THE BOX ROOM",TheBoxRoom
+	," ~ ห้องที่ไปล่าสุด",LastTheBoxRoom
 	," ~ ทดสอบ Damage",TestDamage
 	," ~ PvP [^af1ada" + getmapusers("pvp_n_1-3") + " คน^000000]",Pvp
 	," ~ PvP (Party ได้) [^af1ada" + getmapusers("pvp_n_1-5") + " คน^000000]",PvpParty
@@ -16,6 +17,10 @@
 	
 TheBoxRoom:
 	warp "prontera",156,236;
+	end;
+	
+LastTheBoxRoom:
+	addtimer 1,"TheBoxRoom::OnFastJoin";
 	end;
 	
 TestDamage:
@@ -121,19 +126,18 @@ prontera,161,199,4	duplicate(Warp)	Warp#1	10558
 	.@room = (.@index) + (5 * (.@difficulty - 1));
 	// Remember last play map index
 	lastPlayMap = .@room;
-	// Remember cursed room
-	isCursed = (((lastPlayMap + 1) % 2) == ($isCursedRoomEven ? 0 : 1)) ? 1 : 0;
-	// Remember last play map name
-	lastPlayMap$ = $maps$[$playingMaps[.@room]];
 	// Remember last play map tier
 	tier = .@difficulty;
+OnFastJoin:
+	// Remember last play map name
+	lastPlayMap$ = $maps$[$playingMaps[lastPlayMap]];
+	// Remember cursed room
+	isCursed = (((lastPlayMap + 1) % 2) == ($isCursedRoomEven ? 0 : 1)) ? 1 : 0;
 	// Add x DROP
-	if($tbrNormalDropMultiplier[.@i] > getstatus(SC_ITEMBOOST,1)){
-		.@min = gettime(DT_MINUTE);
-		while(.@min > 10)
-		.@min -= 10;
-		sc_start SC_ITEMBOOST,60 * (1000 * (10 - ((.@min == 10) ? 0 : .@min))),$tbrNormalDropMultiplier[lastPlayMap];
-	}
+	.@min = gettime(DT_MINUTE);
+	while(.@min > 10)
+	.@min -= 10;
+	sc_start SC_ITEMBOOST,60 * (1000 * (10 - ((.@min == 10) ? 0 : .@min))),$tbrNormalDropMultiplier[lastPlayMap];
 	
 	if((tier % 2) == 0)
 	{
@@ -306,10 +310,39 @@ OnGetReward:
 	
 	return;
 	
+OnRefreshInfo:
+	.@difficulty = strnpcinfo(2);
+	
+	.@index = 0 + (5 * (.@difficulty - 1));
+	
+	for(.@i = .@index; .@i < (.@index + 5); .@i++){
+		// Information - Monster ID
+		setarray .@monsterIds[0]
+		,getd("$tbrMID" + .@i + "[0]")
+		,getd("$tbrMID" + .@i + "[1]")
+		,getd("$tbrMID" + .@i + "[2]")
+		,getd("$tbrMID" + .@i + "[3]")
+		;
+		
+		// Information - Monster EXP
+		setarray .@monsterEXPs[0]
+		,getmonsterinfo(.@monsterIds[0],MOB_BASEEXP)
+		,getmonsterinfo(.@monsterIds[1],MOB_BASEEXP)
+		,getmonsterinfo(.@monsterIds[2],MOB_BASEEXP)
+		,getmonsterinfo(.@monsterIds[3],MOB_BASEEXP)
+		;
+		
+		.@averageExp += ((.@monsterEXPs[0] + .@monsterEXPs[1] + .@monsterEXPs[2] + .@monsterEXPs[3])  / 4);
+		.@averageExpMultiplier += ((getd("$tbrExpMultiplier" + .@i + "[0]") + getd("$tbrExpMultiplier" + .@i + "[1]") + getd("$tbrExpMultiplier" + .@i + "[2]") + getd("$tbrExpMultiplier" + .@i + "[3]")) / 4);
+	}
+	delwaitingroom;
+	waitingroom strnpcinfo(0) + " | EXP:" + KM(.@averageExp),0;
+	end;
+	
 OnInit:
 	$rhpMultiplier = 200;
 	$bossRankMultiplier = 2;
-	waitingroom strnpcinfo(0),0;
+	callsub OnRefreshInfo;
 	end;
 }
 
