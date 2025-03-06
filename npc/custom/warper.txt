@@ -313,7 +313,7 @@ OnGetReward:
 OnInit:
 	$rhpMultiplier = 200;
 	$bossRankMultiplier = 2;
-	callsub OnRefreshInfo;
+	waitingroom strnpcinfo(0),0;
 	end;
 }
 
