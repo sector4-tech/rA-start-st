@@ -13,7 +13,8 @@
 //============================================================
 prontera,130,192,8	script	ปารุ	10209,{
 	// Skills, Stats, Both
-	setarray .@prices,5000000,5000000,7000000;
+	.@divider = IsWeekend() ? 2 : 1;
+	setarray .@prices,5000000 / .@divider,5000000 / .@divider,7000000 / .@divider;
 	.@i = (select("Reset Skill [^af1ada" + F_InsertComma(.@prices[0]) + "z^000000]:Reset Status [^af1ada" + F_InsertComma(.@prices[1]) + "z^000000]:Reset ทั้งคู่ [^af1ada" + F_InsertComma(.@prices[2]) + "z^000000]:ยกเลิก"));
 	if(.@i > 3) close;
 	if(Zeny < .@prices[.@i - 1]){
