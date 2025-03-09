@@ -1,10 +1,17 @@
 prontera,156,205,5	script	Rank	857,{
-    query_sql("SELECT char_reg_num.char_id, char_reg_num.`value` FROM char_reg_num WHERE char_reg_num.`key` = 'combo' ORDER BY char_reg_num.`value` DESC LIMIT 100",.@CID,.@v);
-    mes "COMBO";
-    for(.@i = 0; .@i < getarraysize(.@CID); .@i++){
-        query_sql("SELECT `char`.`name` FROM `char` WHERE `char`.char_id = '" + .@CID[.@i] + "'",.@name$);
-        mes (.@i + 1) + ".) " + .@name$ + " (" + .@v[.@i] + ")";
-    }
+	query_sql("SELECT char_reg_num.char_id, char_reg_num.`value` FROM char_reg_num WHERE char_reg_num.`key` = 'combo' ORDER BY char_reg_num.`value` DESC LIMIT 100",.@CID,.@v);
+	mes "COMBO";
+	for(.@i = 0; .@i < getarraysize(.@CID); .@i++){
+		query_sql("SELECT `char`.`name` FROM `char` WHERE `char`.char_id = '" + .@CID[.@i] + "'",.@name$);
+		mes (.@i + 1) + ".) " + .@name$ + " (" + .@v[.@i] + ")";
+	}
+	next;
+	query_sql("SELECT char_reg_num.char_id, char_reg_num.`value` FROM char_reg_num WHERE char_reg_num.`key` = 'bossCombo' ORDER BY char_reg_num.`value` DESC LIMIT 100",.@CID2,.@v2);
+	mes "BOSS COMBO";
+	for(.@i = 0; .@i < getarraysize(.@CID2); .@i++){
+		query_sql("SELECT `char`.`name` FROM `char` WHERE `char`.char_id = '" + .@CID2[.@i] + "'",.@name$);
+		mes (.@i + 1) + ".) " + .@name$ + " (" + .@v2[.@i] + ")";
+	}
 	close;
 
 OnInit:
