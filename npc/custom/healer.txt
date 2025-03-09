@@ -6,7 +6,7 @@
 	"ฟื้นฟู HP & SP เต็ม",-
 	,"ฟื้นฟู HP & SP & AP เต็ม & รับ Buff & Reset Cooldown [^af1ada" + getitemname(.@fullBuffCostItemId) + " " + F_InsertComma(.@fullBuffCost) + " ชิ้น^000000] (สุ่มราคาใหม่หลังซื้อ)",L_FullBuff
 	,"รับ All Status ชั่วคราว จาก Combo",L_Combo
-	,"รับ พลังพิเศษ ชั่วคราว จาก Boss Combo",L_BossCombo
+	,"รับ All Trait ชั่วคราว จาก Boss Combo",L_BossCombo
 	,"ซ่อมอุปกรณ์ทั้งตัว [^af1ada" + F_InsertComma(.@repairAllPrice) + "z^000000]",L_RepairAll
 	;
 	.@Delay = 3;
