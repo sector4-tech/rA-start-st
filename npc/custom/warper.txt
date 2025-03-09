@@ -212,6 +212,9 @@ OnBossDead:
 	end;
 
 OnTryToSpawnBoss:
+	if(IsCustomMap())
+	return;
+
 	// Boss still alive
 	if($isBossAlive[lastPlayMap])
 	return;
