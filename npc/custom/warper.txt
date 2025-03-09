@@ -302,10 +302,16 @@ OnGetReward:
 	
 	// Combo
 	if ((@comboDelay < .@timeTick) || .@isBoss){
-		combo++;
+		combo += tier;
 		@comboDelay = .@timeTick + 1;
 		if(#IS_COMBO_INFO)
 		dispbottom "Combo " + combo;
+		
+		if(.@isBoss){
+			bossCombo += tier - 6;
+			if(#IS_COMBO_INFO)
+			dispbottom "Boss Combo " + bossCombo;
+		}
 	}
 	
 	return;

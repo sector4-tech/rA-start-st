@@ -4,8 +4,9 @@
 	.@repairAllPrice = (100000 * max(1,repairAllPriceMultiplier));
 	menu
 	"ฟื้นฟู HP & SP เต็ม",-
-	,"ฟื้นฟู HP & SP เต็ม & รับ Buff & Reset Cooldown [^af1ada" + getitemname(.@fullBuffCostItemId) + " " + F_InsertComma(.@fullBuffCost) + " ชิ้น^000000] (สุ่มราคาใหม่หลังซื้อ)",L_FullBuff
+	,"ฟื้นฟู HP & SP & AP เต็ม & รับ Buff & Reset Cooldown [^af1ada" + getitemname(.@fullBuffCostItemId) + " " + F_InsertComma(.@fullBuffCost) + " ชิ้น^000000] (สุ่มราคาใหม่หลังซื้อ)",L_FullBuff
 	,"รับ All Status ชั่วคราว จาก Combo",L_Combo
+	,"รับ พลังพิเศษ ชั่วคราว จาก Boss Combo",L_BossCombo
 	,"ซ่อมอุปกรณ์ทั้งตัว [^af1ada" + F_InsertComma(.@repairAllPrice) + "z^000000]",L_RepairAll
 	;
 	.@Delay = 3;
@@ -41,28 +42,56 @@
 	sc_start SC_OVERTHRUST,1800000,5;
 	atcommand "@resetcooltime";
 	percentheal 100,100;
+	healap 10000;
 	specialeffect2 77;
 	fullBuffCostMultiplier = rand(1,IsWeekend() ? 5 : 10);
 	end;
 	
 	L_Combo:
+	setarray .@values[0],1,10,100,1000,10000;
 	mes "คุณมี " + combo + " Combo";
 	mes "*รับแล้ว Combo จะเหลือเท่าเดิม ไม่ลด";
 	next;
 	.@comboIndex = select(
-	"All status +1 ใช้ 10 Combo:"
-	+ "All status +10 ใช้ 100 Combo:"
-	+ "All status +100 ใช้ 1,000 Combo:"
-	+ "All status +1,000 ใช้ 10,000 Combo:"
-	+ "All status +10,000 ใช้ 100,000 Combo:"
+	"All status +" + F_InsertComma(.@values[0]) + " ใช้ 10 Combo:"
+	+ "All status +" + F_InsertComma(.@values[1]) + " ใช้ 100 Combo:"
+	+ "All status +" + F_InsertComma(.@values[2]) + " ใช้ 1,000 Combo:"
+	+ "All status +" + F_InsertComma(.@values[3]) + " ใช้ 10,000 Combo:"
+	+ "All status +" + F_InsertComma(.@values[4]) + " ใช้ 100,000 Combo:"
 	);
 	if(combo < pow(10,.@comboIndex)){
 		mes "Combo ไม่เพียงพอ";
 		close;
 	}
-	bonus_script_clear;
-	bonus_script "bonus bAllStats," + pow((.@comboIndex == 1) ? 1 : 10,.@comboIndex - 1) + ";",86400,1,1;
+	comboPower = .@values[.@comboIndex - 1];
+	callsub L_ApplyComboBonuses;
 	close;
+	
+	L_BossCombo:
+	setarray .@values[0],1,5,10,25,50;
+	mes "คุณมี " + bossCombo + " Boss Combo";
+	mes "*รับแล้ว Boss Combo จะเหลือเท่าเดิม ไม่ลด";
+	next;
+	.@comboIndex = select(
+	"All trait +" + F_InsertComma(.@values[0]) + " ใช้ 10 Boss Combo:"
+	+ "All trait +" + F_InsertComma(.@values[1]) + " ใช้ 100 Boss Combo:"
+	+ "All trait +" + F_InsertComma(.@values[2]) + " ใช้ 1,000 Boss Combo:"
+	+ "All trait +" + F_InsertComma(.@values[3]) + " ใช้ 10,000 Boss Combo:"
+	+ "All trait +" + F_InsertComma(.@values[4]) + " ใช้ 100,000 Boss Combo:"
+	);
+	if(bossCombo < pow(10,.@comboIndex)){
+		mes "Boss Combo ไม่เพียงพอ";
+		close;
+	}
+	bossComboPower = .@values[.@comboIndex - 1];
+	callsub L_ApplyComboBonuses;
+	close;
+	
+	L_ApplyComboBonuses:
+	bonus_script_clear;
+	bonus_script "bonus bAllStats," + comboPower + ";",86400,1,1;
+	bonus_script "bonus bAllTraitStats," + bossComboPower + ";",86400,1,1;
+	return;
 	
 	L_RepairAll:
 	if(Zeny < .@repairAllPrice){
