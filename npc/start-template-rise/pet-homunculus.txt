@@ -19,7 +19,7 @@ OnSpawnMoreFFF:
 	.@amount = getarg(0,0);
 	freeloop(1);
 	for(.@i = 0; .@i < .@amount; .@i++)
-	monster "ordeal_3-2",0,0,"--ja--",$monsterIds[rand(getarraysize($monsterIds))],1,"ÅÑ¡«Õè::OnMonsterDead";
+	monster "ordeal_3-2",0,0,"--ja--",$attackableMonsterIds[rand(getarraysize($attackableMonsterIds))],1,"ÅÑ¡«Õè::OnMonsterDead";
 	freeloop(0);
 	return;
 	
