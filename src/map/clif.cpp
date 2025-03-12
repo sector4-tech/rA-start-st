@@ -9614,12 +9614,12 @@ void clif_wisexin( map_session_data& sd, uint8 type, uint8 flag ){
 /// result:
 ///     0 = success
 ///     1 = failure
-void clif_wisall( map_session_data& sd, uint8 type, uint8 flag ){
+void clif_wisall( map_session_data& sd, uint8 type, bool failure ){
 	PACKET_ZC_SETTING_WHISPER_STATE p{};
 
 	p.packetType = HEADER_ZC_SETTING_WHISPER_STATE;
 	p.type = type;
-	p.result = flag;
+	p.result = failure;
 
 	clif_send( &p, sizeof( p ), &sd.bl, SELF );
 }
@@ -15154,57 +15154,59 @@ void clif_parse_PMIgnore(int32 fd, map_session_data* sd)
 }
 
 
-/// /inall /exall (CZ_SETTING_WHISPER_STATE).
+/// /inall /exall.
 /// Request to allow/deny all whispers.
-/// 00d0 <type>.B
+/// 00d0 <type>.B (CZ_SETTING_WHISPER_STATE)
 /// type:
 ///     0 = (/exall) deny all speech
 ///     1 = (/inall) allow all speech
-void clif_parse_PMIgnoreAll(int32 fd, map_session_data *sd)
-{
-	uint8 type = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]), flag;
+void clif_parse_PMIgnoreAll( int32 fd, map_session_data* sd ){
+	const PACKET_CZ_SETTING_WHISPER_STATE* p = reinterpret_cast<PACKET_CZ_SETTING_WHISPER_STATE*>( RFIFOP( fd, 0 ) );
+	bool failure;
 
-	if( type == 0 ) {// Deny all
+	if( p->type == 0 ) {// Deny all
 		if( sd->state.ignoreAll ) {
-			flag = 1; // fail
+			failure = true;
 		} else {
 			sd->state.ignoreAll = 1;
-			flag = 0; // success
+			failure = false;
 		}
 	} else {//Unblock everyone
 		if( sd->state.ignoreAll ) {
 			sd->state.ignoreAll = 0;
-			flag = 0; // success
+			failure = false;
 		} else {
 			if (sd->ignore[0].name[0] != '\0')
 			{  //Wipe the ignore list.
 				memset(sd->ignore, 0, sizeof(sd->ignore));
-				flag = 0; // success
+				failure = false;
 			} else {
-				flag = 1; // fail
+				failure = true;
 			}
 		}
 	}
 
-	clif_wisall( *sd, type, flag );
+	clif_wisall( *sd, p->type, failure );
 }
 
 
-/// Whisper ignore list (ZC_WHISPER_LIST).
-/// 00d4 <packet len>.W { <char name>.24B }*
-void clif_PMIgnoreList(map_session_data* sd)
-{
-	int32 i, fd = sd->fd;
+/// Whisper ignore list.
+/// 00d4 <packet len>.W { <char name>.24B }* (ZC_WHISPER_LIST)
+void clif_PMIgnoreList( map_session_data& sd ){
+	PACKET_ZC_WHISPER_LIST* p = reinterpret_cast<PACKET_ZC_WHISPER_LIST*>( packet_buffer );
 
-	WFIFOHEAD(fd,4+ARRAYLENGTH(sd->ignore)*NAME_LENGTH);
-	WFIFOW(fd,0) = 0xd4;
+	p->packetType = HEADER_ZC_WHISPER_LIST;
+	p->packetSize = sizeof( *p );
 
-	for( i = 0; i < ARRAYLENGTH(sd->ignore) && sd->ignore[i].name[0]; i++ ) {
-		safestrncpy(WFIFOCP(fd,4+i*NAME_LENGTH), sd->ignore[i].name, NAME_LENGTH);
+	for( size_t i = 0; i < ARRAYLENGTH( sd.ignore ) && sd.ignore[i].name[0]; i++ ){
+		PACKET_ZC_WHISPER_LIST_sub& entry = p->names[i];
+
+		safestrncpy( entry.name, sd.ignore[i].name, sizeof( entry.name ) );
+
+		p->packetSize += static_cast<decltype(p->packetSize)>( sizeof( entry ) );
 	}
 
-	WFIFOW(fd,2) = 4+i*NAME_LENGTH;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	clif_send( p, p->packetSize, &sd.bl, SELF );
 }
 
 
@@ -15212,7 +15214,11 @@ void clif_PMIgnoreList(map_session_data* sd)
 /// 00d3
 void clif_parse_PMIgnoreList(int32 fd,map_session_data *sd)
 {
-	clif_PMIgnoreList(sd);
+	if( sd == nullptr ){
+		return;
+	}
+
+	clif_PMIgnoreList( *sd );
 }
 
 
