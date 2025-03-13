@@ -3178,7 +3178,7 @@ int32 mob_dead(struct mob_data *md, struct block_list *src, int32 type)
 			if (entry->nameid == 0)
 				continue;
 
-			bool isMainItemDrop = (md->db->dropitem[i].nameid == battle_config.config_main_item_drop_id);
+			bool isMainItemDrop = (entry->nameid == battle_config.config_main_item_drop_id);
 			if (isMainItemDrop) // [Start's] Delay main item drop
 			{
 				if (sd) {
@@ -4738,8 +4738,6 @@ bool MobDatabase::parseDropNode( std::string nodeName, const ryml::NodeRef& node
 			exist = false;
 		}
 
-		lastIndex = index + 1;
-
 		std::string item_name;
 
 		if (!this->asString(dropit, "Item", item_name))
@@ -4787,20 +4785,22 @@ bool MobDatabase::parseDropNode( std::string nodeName, const ryml::NodeRef& node
 	}
 	
 // [Start's]
-	if (battle_config.config_global_drop && !isMvp && (lastIndex < MAX_MOB_DROP_TOTAL)) {
-		drops[lastIndex].nameid = battle_config.config_global_drop;
-		drops[lastIndex].rate = (battle_config.config_global_drop_base_rate * monsterLv);
-		drops[lastIndex].steal_protected = true;
-		drops[lastIndex].randomopt_group = 0;
+	if (battle_config.config_global_drop && !isMvp) {
+		std::shared_ptr<s_mob_drop> drop;
+		drop = drops[max-1];
+		drop->nameid = battle_config.config_global_drop;
+		drop->rate = (battle_config.config_global_drop_base_rate * monsterLv);
+		drop->steal_protected = true;
+		drop->randomopt_group = 0;
 	}
 
-	lastIndex++;
-	if (battle_config.config_global_mvp_drop && isMvp && (lastIndex < MAX_MVP_DROP_TOTAL)) {
-
-		drops[lastIndex].nameid = battle_config.config_global_mvp_drop;
-		drops[lastIndex].rate = battle_config.config_global_mvp_drop_rate;
-		drops[lastIndex].steal_protected = true;
-		drops[lastIndex].randomopt_group = 0;
+	if (battle_config.config_global_mvp_drop && isMvp) {
+		std::shared_ptr<s_mob_drop> drop;
+		drop = drops[max - 1];
+		drop->nameid = battle_config.config_global_mvp_drop;
+		drop->rate = (battle_config.config_global_mvp_drop_rate);
+		drop->steal_protected = true;
+		drop->randomopt_group = 0;
 	}
 	
 	return true;
@@ -5379,10 +5379,10 @@ uint64 MobDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	else {
 		// [Start's]
 		if (battle_config.config_global_mvp_drop && mob->mexp) {
-			mob->mvpitem[0].nameid = battle_config.config_global_mvp_drop;
-			mob->mvpitem[0].rate = battle_config.config_global_mvp_drop_rate;
-			mob->mvpitem[0].steal_protected = true;
-			mob->mvpitem[0].randomopt_group = 0;
+			mob->mvpitem[0]->nameid = battle_config.config_global_mvp_drop;
+			mob->mvpitem[0]->rate = battle_config.config_global_mvp_drop_rate;
+			mob->mvpitem[0]->steal_protected = true;
+			mob->mvpitem[0]->randomopt_group = 0;
 		}
 	}
 
@@ -5393,10 +5393,10 @@ uint64 MobDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	else {
 		// [Start's]
 		if (battle_config.config_global_drop) {
-			mob->dropitem[0].nameid = battle_config.config_global_drop;
-			mob->dropitem[0].rate = (battle_config.config_global_drop_base_rate * mob->lv);
-			mob->dropitem[0].steal_protected = true;
-			mob->dropitem[0].randomopt_group = 0;
+			mob->dropitem[0]->nameid = battle_config.config_global_drop;
+			mob->dropitem[0]->rate = (battle_config.config_global_drop_base_rate * mob->lv);
+			mob->dropitem[0]->steal_protected = true;
+			mob->dropitem[0]->randomopt_group = 0;
 		}
 	}
 
