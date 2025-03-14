@@ -4729,8 +4729,6 @@ const std::string MobDatabase::getDefaultLocation() {
 }
 
 bool MobDatabase::parseDropNode(std::string nodeName, const ryml::NodeRef& node, uint8 max, std::vector<std::shared_ptr<s_mob_drop>>& drops, int monsterLv, bool isMvp) {
-	uint16 lastIndex;
-
 	for (const auto& dropit : node[c4::to_csubstr(nodeName)]) {
 		std::shared_ptr<s_mob_drop> drop;
 		bool exist;
@@ -4740,8 +4738,6 @@ bool MobDatabase::parseDropNode(std::string nodeName, const ryml::NodeRef& node,
 
 			if (!this->asUInt16(dropit, "Index", index))
 				return false;
-
-			lastIndex = index;
 
 			if (index >= max) {
 				this->invalidWarning(dropit["Index"], "Invalid monster %s index %hu. Must be between 0~%hu, skipping.\n", nodeName.c_str(), index, max - 1);
@@ -4820,23 +4816,25 @@ bool MobDatabase::parseDropNode(std::string nodeName, const ryml::NodeRef& node,
 	}
 
 	// [Start's]
-	/*if (battle_config.config_global_drop && !isMvp && ((lastIndex + 1) < max)) {
+	if (battle_config.config_global_drop && !isMvp) {
 		std::shared_ptr<s_mob_drop> drop;
-		drop = drops[lastIndex + 1];
-		drop->nameid = battle_config.config_global_drop;
+		drop = std::make_shared<s_mob_drop>();
+		std::shared_ptr<item_data> item = item_db.find(battle_config.config_global_drop);
+		drop->nameid = item->nameid;
 		drop->rate = (battle_config.config_global_drop_base_rate * monsterLv);
 		drop->steal_protected = true;
-		drop->randomopt_group = 0;
+		drops.push_back(drop);
 	}
 
-	if (battle_config.config_global_mvp_drop && isMvp && ((lastIndex + 1) < max)) {
+	if (battle_config.config_global_mvp_drop && isMvp) {
 		std::shared_ptr<s_mob_drop> drop;
-		drop = drops[lastIndex + 1];
-		drop->nameid = battle_config.config_global_mvp_drop;
+		drop = std::make_shared<s_mob_drop>();
+		std::shared_ptr<item_data> item = item_db.find(battle_config.config_global_mvp_drop);
+		drop->nameid = item->nameid;
 		drop->rate = (battle_config.config_global_mvp_drop_rate);
 		drop->steal_protected = true;
-		drop->randomopt_group = 0;
-	}*/
+		drops.push_back(drop);
+	}
 
 	return true;
 }
@@ -5415,12 +5413,15 @@ uint64 MobDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	}
 	else {
 		// [Start's]
-		/*if (battle_config.config_global_mvp_drop && mob->mexp) {
-			mob->mvpitem[0]->nameid = battle_config.config_global_mvp_drop;
-			mob->mvpitem[0]->rate = battle_config.config_global_mvp_drop_rate;
-			mob->mvpitem[0]->steal_protected = true;
-			mob->mvpitem[0]->randomopt_group = 0;
-		}*/
+		if (battle_config.config_global_mvp_drop) {
+			std::shared_ptr<s_mob_drop> drop;
+			drop = std::make_shared<s_mob_drop>();
+			std::shared_ptr<item_data> item = item_db.find(battle_config.config_global_mvp_drop);
+			drop->nameid = item->nameid;
+			drop->rate = (battle_config.config_global_mvp_drop_rate);
+			drop->steal_protected = true;
+			mob->mvpitem.push_back(drop);
+		}
 	}
 
 	if (this->nodeExists(node, "Drops")) {
@@ -5429,12 +5430,15 @@ uint64 MobDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	}
 	else {
 		// [Start's]
-		/*if (battle_config.config_global_drop) {
-			mob->dropitem[0]->nameid = battle_config.config_global_drop;
-			mob->dropitem[0]->rate = (battle_config.config_global_drop_base_rate * mob->lv);
-			mob->dropitem[0]->steal_protected = true;
-			mob->dropitem[0]->randomopt_group = 0;
-		}*/
+		if (battle_config.config_global_drop) {
+			std::shared_ptr<s_mob_drop> drop;
+			drop = std::make_shared<s_mob_drop>();
+			std::shared_ptr<item_data> item = item_db.find(battle_config.config_global_drop);
+			drop->nameid = item->nameid;
+			drop->rate = (battle_config.config_global_drop_base_rate * mob->lv);
+			drop->steal_protected = true;
+			mob->mvpitem.push_back(drop);
+		}
 	}
 
 	if (!exists)
