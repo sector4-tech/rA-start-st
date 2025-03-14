@@ -279,7 +279,7 @@ OnGetReward:
 	ChangeZeny($zenyTiers[tier - 1] * (.@cursedMultiplier + (.@isBoss ? 10 : getd("$tbrZenyMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]"))),0);
 	
 	// Reward EXP
-	.@rewardExp = $expTiers[tier - 1] * (.@cursedMultiplier + (.@isBoss ? 10 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]")));
+	.@rewardExp = $expTiers[tier - 1] * (.@cursedMultiplier + (.@isBoss ? 30 : getd("$tbrExpMultiplier" + lastPlayMap + "[" + .@monsterIndex + "]")));
 	getexp .@rewardExp,.@rewardExp / 2;
 	
 	// Reward Refine Hack Powder ( Difficult / 4 ) %
