@@ -52,22 +52,42 @@ OnSetupMonsterId:
 		
 		// Setup EXP multiplier
 		setarray getd("$tbrExpMultiplier" + .@i + "[0]")
-		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		,(rand(100) < 1) ? 10	// 1%		EXP x10
+		: (rand(100) < 3) ? 9	// 3%		EXP x9
+		: (rand(100) < 5) ? 8	// 5%		EXP x8
+		: (rand(100) < 7) ? 7	// 7%		EXP x7
+		: (rand(100) < 9) ? 6	// 9%		EXP x6
+		: (rand(100) < 10) ? 5	// 10%		EXP x5
 		: (rand(100) < 20) ? 4	// 20%		EXP x4
 		: (rand(100) < 40) ? 3	// 40%		EXP x3
 		: (rand(100) < 80) ? 2	// 80%		EXP x2
 		: 1								// 100%	EXP x1
-		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		,(rand(100) < 1) ? 10	// 1%		EXP x10
+		: (rand(100) < 3) ? 9	// 3%		EXP x9
+		: (rand(100) < 5) ? 8	// 5%		EXP x8
+		: (rand(100) < 7) ? 7	// 7%		EXP x7
+		: (rand(100) < 9) ? 6	// 9%		EXP x6
+		: (rand(100) < 10) ? 5	// 10%		EXP x5
 		: (rand(100) < 20) ? 4	// 20%		EXP x4
 		: (rand(100) < 40) ? 3	// 40%		EXP x3
 		: (rand(100) < 80) ? 2	// 80%		EXP x2
 		: 1								// 100%	EXP x1
-		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		,(rand(100) < 1) ? 10	// 1%		EXP x10
+		: (rand(100) < 3) ? 9	// 3%		EXP x9
+		: (rand(100) < 5) ? 8	// 5%		EXP x8
+		: (rand(100) < 7) ? 7	// 7%		EXP x7
+		: (rand(100) < 9) ? 6	// 9%		EXP x6
+		: (rand(100) < 10) ? 5	// 10%		EXP x5
 		: (rand(100) < 20) ? 4	// 20%		EXP x4
 		: (rand(100) < 40) ? 3	// 40%		EXP x3
 		: (rand(100) < 80) ? 2	// 80%		EXP x2
 		: 1								// 100%	EXP x1
-		,(rand(100) < 10) ? 5	// 10%		EXP x5
+		,(rand(100) < 1) ? 10	// 1%		EXP x10
+		: (rand(100) < 3) ? 9	// 3%		EXP x9
+		: (rand(100) < 5) ? 8	// 5%		EXP x8
+		: (rand(100) < 7) ? 7	// 7%		EXP x7
+		: (rand(100) < 9) ? 6	// 9%		EXP x6
+		: (rand(100) < 10) ? 5	// 10%		EXP x5
 		: (rand(100) < 20) ? 4	// 20%		EXP x4
 		: (rand(100) < 40) ? 3	// 40%		EXP x3
 		: (rand(100) < 80) ? 2	// 80%		EXP x2
