@@ -25,10 +25,12 @@ prontera,147,171,6	script	THE BOX	10033,{
 	.@saveIndex = .@index;
 	if(.@index >= 14)
 	.@index++;
-	if(.@index >= 18)
+	if(.@index >= 15)
+	.@index++;
+	if(.@index >= 19)
 	.@index++;
 
-	.@variableName$ = $subType$[.@index];
+	.@variableName$ = $type$[.@index] + "_" + $subType$[.@index];
 	.@cost = .@weaponCost;
 	.@mes$ = "ต้องการสุ่ม " + .@subType$[.@saveIndex] + " กี่รอบ?";
 	goto L_Confirmation;
