@@ -11,7 +11,7 @@ OnRefreshOnlineAmount:
 	query_sql("SELECT `char`.char_id FROM `char` WHERE `char`.`online` = 1",.@onlinePlayers);
 	query_sql("SELECT vendings.id FROM vendings WHERE vendings.autotrade = 1",.@autoTraders);
 	query_sql("SELECT buyingstores.id FROM buyingstores WHERE buyingstores.autotrade = 1",.@buyAutoTraders);
-	waitingroom "ON " + getarraysize(.@onlinePlayers) + " AT " + (getarraysize(.@autoTraders) + getarraysize(.@buyAutoTraders)),0;
+	waitingroom "ON: " + getarraysize(.@onlinePlayers) + " | AT: " + (getarraysize(.@autoTraders) + getarraysize(.@buyAutoTraders)),0;
 	.isWaitingRoom = 1;
 	end;
 }
