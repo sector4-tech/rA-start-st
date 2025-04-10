@@ -1430,12 +1430,9 @@ bool battle_status_block_damage(struct block_list *src, struct block_list *targe
 	}
 
 	if ((sc->getSCE(SC_PNEUMA) && (flag&(BF_MAGIC | BF_LONG)) == BF_LONG) ||
-#ifdef RENEWAL
-		(sc->getSCE(SC_BASILICA_CELL)
-#else
-		(sc->getSCE(SC_BASILICA)
+#ifndef RENEWAL
+		(sc->getSCE(SC_BASILICA) != nullptr && !status_bl_has_mode(src, MD_STATUSIMMUNE)) ||
 #endif
-		&& !status_bl_has_mode(src, MD_STATUSIMMUNE) && skill_id != SP_SOULEXPLOSION) ||
 		(sc->getSCE(SC_ZEPHYR) && !(flag&BF_MAGIC && skill_id) && !(skill_get_inf(skill_id)&(INF_GROUND_SKILL | INF_SELF_SKILL))) ||
 		sc->getSCE(SC__MANHOLE) ||
 		sc->getSCE(SC_KINGS_GRACE) ||
@@ -8228,12 +8225,18 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	switch(skill_id) {
 		case MG_FIREWALL:
-			if ( tstatus->def_ele == ELE_FIRE || battle_check_undead(tstatus->race, tstatus->def_ele) )
+			if (tstatus->def_ele == ELE_FIRE || battle_check_undead(tstatus->race, tstatus->def_ele)) {
 				ad.blewcount = 0; //No knockback
+				// Fire and undead units hit by firewall cannot be stopped for 2 seconds
+				if (unit_data* ud = unit_bl2ud(target); ud != nullptr)
+					ud->endure_tick = gettick() + 2000;
+				break;
+			}
 			[[fallthrough]];
 		case NJ_KAENSIN:
 		case PR_SANCTUARY:
-			ad.dmotion = 1; //No flinch animation.
+			// TODO: This code is a temporary workaround because right now we stop monsters for their dmotion which is not official
+			ad.dmotion = 1;
 			break;
 	}
 
