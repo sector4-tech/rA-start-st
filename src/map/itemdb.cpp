@@ -436,7 +436,6 @@ uint64 ItemDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	if (battle_config.config_all_equipment_skip_gender) {
 		// [Start's]
 		item->sex = SEX_BOTH;
-		item->sex = this->defaultGender(node, item);
 	}
 	else if (this->nodeExists(node, "Gender")) {
 		std::string gender;
