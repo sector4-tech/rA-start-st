@@ -1934,37 +1934,17 @@ static bool mob_ai_sub_hard(struct mob_data* md, t_tick tick)
 						|| md->walktoxy_fail_count > 0)
 						)
 					|| !mob_can_reach(md, tbl, md->db->range3)
-				)
-			&&  ++md->state.attacked_count > RUDE_ATTACKED_COUNT) {
-				mobskill_use(md, tick, MSC_RUDEATTACKED);
+					)
+				&& md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
+				&& !mobskill_use(md, tick, MSC_RUDEATTACKED) // If can't rude Attack
+				&& can_move && unit_escape(&md->bl, tbl, rnd() % 10 + 1)) // Attempt escape
+			{	//Escaped
+				md->attacked_id = md->norm_attacked_id = 0;
+				return true;
 			}
 		}
 		else
-		if( (abl = map_id2bl(md->attacked_id)) && (!tbl || mob_can_changetarget(md, abl, mode)) )
-		{
-			int32 dist;
-			if( md->bl.m != abl->m || abl->prev == nullptr
-				|| (dist = distance_bl(&md->bl, abl)) > AREA_SIZE // Attacker longer than visual area
-				|| battle_check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
-				|| (battle_config.mob_ai&0x2 && !status_check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
-				|| (!battle_check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
-				&& ( // Reach check
-					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || md->sc.getSCE(SC_SPIDERWEB)
-						|| md->sc.getSCE(SC_BITE) || md->sc.getSCE(SC_VACUUM_EXTREME) || md->sc.getSCE(SC_THORNSTRAP)
-						|| md->sc.getSCE(SC__MANHOLE) // Not yet confirmed if boss will teleport once it can't reach target.
-						|| md->walktoxy_fail_count > 0)
-					)
-					|| !mob_can_reach(md, abl, dist+md->db->range3)
-				   )
-				) )
-			{ // Rude attacked
-				if (abl->id != md->bl.id //Self damage does not cause rude attack
-				&& ++md->state.attacked_count > RUDE_ATTACKED_COUNT) {
-					mobskill_use(md, tick, MSC_RUDEATTACKED);
-				}
-			}
-			else
-			if (!(battle_config.mob_ai&0x2) && !status_check_skilluse(&md->bl, abl, 0, 0))
+			if ((abl = map_id2bl(md->attacked_id)) && (!tbl || mob_can_changetarget(md, abl, mode)))
 			{
 				int32 dist;
 				if (md->bl.m != abl->m || abl->prev == nullptr
@@ -2999,8 +2979,8 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 	}
 
 	if (!lootdmg.empty()) {
-		// Officially, the first player in the damage log gets 30% of total damage as bonus for loot priority
-		lootdmg[0].damage += (total_damage * battle_config.first_attack_loot_bonus) / 100;
+		// First player in the damage log gets 30% of total damage as bonus for loot priority
+		lootdmg[0].damage += (total_damage * 30) / 100;
 
 		// Sort list by damage now and determine top 3 damage dealers
 		std::sort(lootdmg.begin(), lootdmg.end(), [](s_dmg_entry& a, s_dmg_entry& b) {
