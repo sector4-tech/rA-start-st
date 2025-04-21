@@ -1934,37 +1934,13 @@ static bool mob_ai_sub_hard(struct mob_data* md, t_tick tick)
 						|| md->walktoxy_fail_count > 0)
 						)
 					|| !mob_can_reach(md, tbl, md->db->range3)
-				)
-			&&  ++md->state.attacked_count > RUDE_ATTACKED_COUNT) {
+					)
+				&& ++md->state.attacked_count > RUDE_ATTACKED_COUNT) {
 				mobskill_use(md, tick, MSC_RUDEATTACKED);
 			}
 		}
 		else
-		if( (abl = map_id2bl(md->attacked_id)) && (!tbl || mob_can_changetarget(md, abl, mode)) )
-		{
-			int32 dist;
-			if( md->bl.m != abl->m || abl->prev == nullptr
-				|| (dist = distance_bl(&md->bl, abl)) > AREA_SIZE // Attacker longer than visual area
-				|| battle_check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
-				|| (battle_config.mob_ai&0x2 && !status_check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
-				|| (!battle_check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
-				&& ( // Reach check
-					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || md->sc.getSCE(SC_SPIDERWEB)
-						|| md->sc.getSCE(SC_BITE) || md->sc.getSCE(SC_VACUUM_EXTREME) || md->sc.getSCE(SC_THORNSTRAP)
-						|| md->sc.getSCE(SC__MANHOLE) // Not yet confirmed if boss will teleport once it can't reach target.
-						|| md->walktoxy_fail_count > 0)
-					)
-					|| !mob_can_reach(md, abl, dist+md->db->range3)
-				   )
-				) )
-			{ // Rude attacked
-				if (abl->id != md->bl.id //Self damage does not cause rude attack
-				&& ++md->state.attacked_count > RUDE_ATTACKED_COUNT) {
-					mobskill_use(md, tick, MSC_RUDEATTACKED);
-				}
-			}
-			else
-			if (!(battle_config.mob_ai&0x2) && !status_check_skilluse(&md->bl, abl, 0, 0))
+			if ((abl = map_id2bl(md->attacked_id)) && (!tbl || mob_can_changetarget(md, abl, mode)))
 			{
 				int32 dist;
 				if (md->bl.m != abl->m || abl->prev == nullptr
@@ -1983,13 +1959,8 @@ static bool mob_ai_sub_hard(struct mob_data* md, t_tick tick)
 						))
 				{ // Rude attacked
 					if (abl->id != md->bl.id //Self damage does not cause rude attack
-						&& md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-						&& !mobskill_use(md, tick, MSC_RUDEATTACKED) && can_move
-						&& !tbl && unit_escape(&md->bl, abl, rnd() % 10 + 1))
-					{	//Escaped.
-						//TODO: Maybe it shouldn't attempt to run if it has another, valid target?
-						md->attacked_id = md->norm_attacked_id = 0;
-						return true;
+						&& ++md->state.attacked_count > RUDE_ATTACKED_COUNT) {
+						mobskill_use(md, tick, MSC_RUDEATTACKED);
 					}
 				}
 				else
@@ -2023,7 +1994,7 @@ static bool mob_ai_sub_hard(struct mob_data* md, t_tick tick)
 	// Scan area for targets
 
 	// Scan area for items to loot, avoid trying to loot if the mob is full and can't consume the items.
-	if (can_move && mode&MD_LOOTER && md->lootitems && DIFF_TICK(tick, md->ud.canact_tick) > 0 &&
+	if (can_move && mode & MD_LOOTER && md->lootitems && DIFF_TICK(tick, md->ud.canact_tick) > 0 &&
 		(md->lootitem_count < LOOTITEM_SIZE || battle_config.monster_loot_type != 1))
 	{
 		if (tbl == nullptr) {
@@ -2884,9 +2855,9 @@ map_session_data* mob_data::get_mvp_player() {
  *------------------------------------------*/
 int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 {
-	struct status_data *status;
-	map_session_data *sd = nullptr, *tmpsd[DAMAGELOG_SIZE];
-	map_session_data *first_sd = nullptr, *second_sd = nullptr, *third_sd = nullptr;
+	struct status_data* status;
+	map_session_data* sd = nullptr, * tmpsd[DAMAGELOG_SIZE];
+	map_session_data* first_sd = nullptr, * second_sd = nullptr, * third_sd = nullptr;
 
 	struct {
 		struct party_data* p;
@@ -2901,8 +2872,8 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 
 	status = &md->status;
 
-	if( src && src->type == BL_PC ) {
-		sd = (map_session_data *)src;
+	if (src && src->type == BL_PC) {
+		sd = (map_session_data*)src;
 		first_sd = sd;
 	}
 
@@ -2992,7 +2963,8 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 			dmg_entry.sd = tsd;
 			dmg_entry.damage = entry.dmg;
 			lootdmg.push_back(dmg_entry);
-		} else {
+		}
+		else {
 			// Slave damage is added to the player's damage
 			it->damage += entry.dmg;
 		}
@@ -3005,7 +2977,7 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 		// Sort list by damage now and determine top 3 damage dealers
 		std::sort(lootdmg.begin(), lootdmg.end(), [](s_dmg_entry& a, s_dmg_entry& b) {
 			return a.damage > b.damage;
-		});
+			});
 		first_sd = lootdmg[0].sd;
 		if (lootdmg.size() > 1)
 			second_sd = lootdmg[1].sd;
@@ -3021,7 +2993,7 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 	// Determine MVP (need to do it here so that it's not influenced by first attacker bonus below)
 	map_session_data* mvp_sd = md->get_mvp_player();
 
-	if(battle_config.exp_calc_type == 2 && count > 1) {	//Apply first-attacker 200% exp share bonus
+	if (battle_config.exp_calc_type == 2 && count > 1) {	//Apply first-attacker 200% exp share bonus
 		s_dmglog& entry = md->dmglog[0];
 		total_damage = util::safe_addition_cap(total_damage, entry.dmg, INT64_MAX);
 		entry.dmg = util::safe_addition_cap(entry.dmg, entry.dmg, INT64_MAX);
@@ -3216,6 +3188,7 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 
 #ifdef RENEWAL_DROP
 		drop_modifier = pc_level_penalty_mod( first_sd != nullptr ? first_sd : second_sd != nullptr ? second_sd : third_sd, PENALTY_DROP, nullptr, md );
+		drop_modifier = pc_level_penalty_mod(first_sd != nullptr ? first_sd : second_sd != nullptr ? second_sd : third_sd, PENALTY_DROP, nullptr, md);
 #endif
 
 		std::shared_ptr<s_item_drop_list> dlist = std::make_shared<s_item_drop_list>();
@@ -3411,7 +3384,7 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 	}
 
 	// MVP Reward
-	if( mvp_sd != nullptr ){
+	if (mvp_sd != nullptr) {
 		t_itemid log_mvp_nameid = 0;
 		t_exp log_mvp_exp = 0;
 
@@ -3513,7 +3486,7 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 		log_mvpdrop(mvp_sd, md->mob_id, log_mvp_nameid, log_mvp_exp);
 	}
 
-	if (type&2 && !sd && md->mob_id == MOBID_EMPERIUM)
+	if (type & 2 && !sd && md->mob_id == MOBID_EMPERIUM)
 		// Emperium destroyed by script. Discard top damage dealer.
 		first_sd = nullptr;
 
@@ -3570,18 +3543,21 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 				pc_setparam(sd, SP_KILLEDGID, md->bl.id);
 				pc_setparam(sd, SP_KILLEDRID, md->mob_id);
 				pc_setparam(sd, SP_KILLERRID, sd->bl.id);
-				npc_event(sd,md->npc_event,0);
-			} else if( first_sd != nullptr ) {
+				npc_event(sd, md->npc_event, 0);
+			}
+			else if (first_sd != nullptr) {
 				pc_setparam(first_sd, SP_KILLEDGID, md->bl.id);
 				pc_setparam(first_sd, SP_KILLEDRID, md->mob_id);
-				pc_setparam(first_sd, SP_KILLERRID, sd?sd->bl.id:0);
-				npc_event(first_sd,md->npc_event,0);
-			} else
+				pc_setparam(first_sd, SP_KILLERRID, sd ? sd->bl.id : 0);
+				npc_event(first_sd, md->npc_event, 0);
+			}
+			else
 				npc_event_do(md->npc_event);
-		} else if( first_sd != nullptr && !md->state.npc_killmonster ) {
+		}
+		else if (first_sd != nullptr && !md->state.npc_killmonster) {
 			pc_setparam(first_sd, SP_KILLEDGID, md->bl.id);
 			pc_setparam(first_sd, SP_KILLEDRID, md->mob_id);
-			npc_script_event( *first_sd, NPCE_KILLNPC );
+			npc_script_event(*first_sd, NPCE_KILLNPC);
 		}
 	}
 
@@ -4535,7 +4511,7 @@ int32 mobskill_event(struct mob_data* md, struct block_list* src, t_tick tick, i
 void mob_set_delay(mob_data& md, t_tick tick, e_delay_event event)
 {
 	// A monster's AI is inactive for its attack motion after attacking or finish casting a skill
-	if (!(battle_config.mob_ai&0x2000) && (event == DELAY_EVENT_ATTACK || event == DELAY_EVENT_CASTEND))
+	if (!(battle_config.mob_ai & 0x2000) && (event == DELAY_EVENT_ATTACK || event == DELAY_EVENT_CASTEND))
 		md.next_thinktime = i64max(tick + md.status.amotion, md.next_thinktime);
 
 	// On cast end and cast cancel, the monster skill delays are set
@@ -7267,8 +7243,8 @@ void mob_reload_itemmob_data(void) {
 			continue;
 		}
 
-		for( const std::shared_ptr<s_mob_drop>& entry : pair.second->dropitem ){
-			if( !entry->nameid )
+		for (const std::shared_ptr<s_mob_drop>& entry : pair.second->dropitem) {
+			if (!entry->nameid)
 				continue;
 
 			item_data* id = itemdb_search(entry->nameid);
