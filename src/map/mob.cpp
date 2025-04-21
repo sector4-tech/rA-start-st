@@ -3187,7 +3187,6 @@ int32 mob_dead(struct mob_data* md, struct block_list* src, int32 type)
 		int32 drop_rate, drop_modifier = 100;
 
 #ifdef RENEWAL_DROP
-		drop_modifier = pc_level_penalty_mod( first_sd != nullptr ? first_sd : second_sd != nullptr ? second_sd : third_sd, PENALTY_DROP, nullptr, md );
 		drop_modifier = pc_level_penalty_mod(first_sd != nullptr ? first_sd : second_sd != nullptr ? second_sd : third_sd, PENALTY_DROP, nullptr, md);
 #endif
 
